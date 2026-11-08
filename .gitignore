@@ -1,0 +1,6 @@
+# Keep the original Word documents out of the public website repository.
+*.docx
+~$*.docx
+
+# Unrelated source page in this workspace.
+maria_dating_profile_v2.html

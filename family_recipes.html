@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#fbf7f3">
+  <title>Семейная книга рецептов</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'DM Sans', sans-serif; }
+    :root {
+      --paper: #fbf7f3;
+      --paper-deep: #f1e7e2;
+      --ink: #393635;
+      --green: #657b6c;
+      --green-dark: #46584d;
+      --accent: #a96558;
+      --gold: #efb0a1;
+      --rose: #f4afb4;
+      --sage: #94a89a;
+      --muted: #847975;
+      --line: #c9b7ad;
+      --white: #fffdfb;
+      --radius-panel: 18px;
+      --radius-card: 14px;
+      --radius-control: 9px;
+      --serif: 'Lora', Georgia, serif;
+    }
+    a { color: inherit; }
+    button, input, select, textarea { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .site { max-width: 1180px; margin: auto; padding: 0 34px 72px; }
+    .masthead { display: flex; justify-content: space-between; align-items: center; padding: 19px 0; border-bottom: 1px solid var(--line); }
+    .brand { display: inline-flex; gap: 10px; align-items: center; color: var(--green-dark); text-decoration: none; font-size: 13px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+    .brand-mark { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--green); border-radius: 50%; font-family: var(--serif); font-size: 17px; }
+    .top-link { color: var(--green); font-size: 13px; font-weight: 600; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+    .masthead-actions { display: flex; align-items: center; gap: 20px; }
+    .language-switch { display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--white); }
+    .language-button { min-width: 34px; min-height: 30px; padding: 4px 7px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; font-size: 11px; font-weight: 700; }
+    .language-button[aria-pressed="true"] { background: var(--green-dark); color: var(--white); }
+    .hero { display: grid; grid-template-columns: 1.05fr .95fr; min-height: 390px; margin-top: 20px; overflow: hidden; border-radius: var(--radius-panel); background: var(--green-dark); }
+    .hero-copy { display: flex; flex-direction: column; justify-content: center; padding: 52px clamp(28px, 5vw, 70px); color: var(--white); }
+    .eyebrow { margin: 0 0 16px; color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+    h1 { max-width: 560px; margin: 0; font-family: var(--serif); font-size: clamp(40px, 5vw, 64px); font-weight: 400; line-height: 1.08; }
+    .hero-copy > p:not(.eyebrow) { max-width: 430px; margin: 20px 0 0; color: #f2e8e5; font-size: 16px; line-height: 1.75; }
+    .hero-action { align-self: flex-start; margin-top: 28px; padding: 12px 17px; border: 1px solid var(--gold); border-radius: var(--radius-control); color: var(--white); font-size: 13px; font-weight: 600; text-decoration: none; transition: background .2s, color .2s; }
+    .hero-action:hover { background: var(--gold); color: var(--green-dark); }
+    .hero-image { min-height: 360px; background: var(--green) url('recipe-images/apple-buns.png') center 54% / cover no-repeat; }
+    .facts { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--line); }
+    .fact { padding: 18px 22px; border-right: 1px solid var(--line); }
+    .fact:last-child { border-right: 0; }
+    .fact strong { display: block; color: var(--green); font-family: var(--serif); font-size: 21px; font-weight: 500; }
+    .fact span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+    .section { padding-top: 54px; }
+    .section-heading { display: flex; align-items: baseline; gap: 16px; margin-bottom: 20px; }
+    .section-heading h2 { margin: 0; color: var(--green-dark); font-family: var(--serif); font-size: 28px; font-weight: 500; }
+    .section-heading::after { height: 1px; flex: 1; background: var(--line); content: ''; }
+    .section-kicker { margin: 0 0 8px; color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    .intro-note { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 24px; padding: 23px 26px; border-left: 3px solid var(--gold); border-radius: 0 var(--radius-card) var(--radius-card) 0; background: #f7e9e5; }
+    .intro-note p { max-width: 700px; margin: 0; color: #514846; font-family: var(--serif); font-size: 17px; line-height: 1.7; }
+    .note-sign { color: var(--accent); font-family: var(--serif); font-size: 14px; font-style: italic; white-space: nowrap; }
+    .catalog-tools { display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: 12px; margin: 22px 0 20px; }
+    .search-wrap { position: relative; }
+    .search-wrap::before { position: absolute; top: 50%; left: 15px; color: var(--muted); content: '⌕'; font-size: 22px; transform: translateY(-55%); }
+    .search, .category-select { width: 100%; min-height: 48px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--white); color: var(--ink); outline: none; }
+    .search { padding: 12px 14px 12px 44px; }
+    .category-select { padding: 10px 12px; }
+    .search:focus, .category-select:focus, .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--green); box-shadow: 0 0 0 2px rgb(53 91 70 / 12%); }
+    .contents { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .contents-block { padding: 20px 22px 18px; border-top: 2px solid var(--green); border-radius: var(--radius-card); background: var(--white); }
+    .contents-block h3 { margin: 0 0 13px; color: var(--green); font-size: 10px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    .contents-list { display: flex; flex-wrap: wrap; gap: 8px 17px; margin: 0; padding: 0; list-style: none; }
+    .contents-list a { color: var(--ink); font-size: 13px; text-decoration-color: var(--line); text-underline-offset: 4px; }
+    .contents-list a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+    .letter-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px 16px; }
+    .letter-list a { display: block; color: var(--ink); font-size: 12px; line-height: 1.5; text-decoration-color: var(--line); text-underline-offset: 3px; }
+    .letter-list a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+    .alpha-letter { margin-right: 7px; color: var(--accent); font-size: 10px; font-weight: 700; }
+    .recipe-count { margin: 15px 0 0; color: var(--muted); font-size: 12px; }
+    .recipe-section { padding-top: 42px; scroll-margin-top: 90px; }
+    .recipe-section-title { display: flex; align-items: baseline; gap: 12px; margin: 0 0 15px; font-family: var(--serif); font-size: 24px; font-weight: 500; }
+    .recipe-section-title small { color: var(--muted); font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 500; }
+    .recipe-list { display: grid; gap: 14px; }
+    .recipe-card { display: grid; grid-template-columns: 190px minmax(0, 1fr); min-height: 228px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-card); background: var(--white); scroll-margin-top: 95px; transition: border-color .2s, transform .2s; }
+    .recipe-card:hover { border-color: var(--sage); transform: translateY(-2px); }
+    .recipe-photo { min-height: 100%; background-color: var(--paper-deep); background-position: center; background-size: cover; }
+    .recipe-body { padding: 22px 24px; }
+    .recipe-meta { display: flex; flex-wrap: wrap; gap: 8px 15px; margin-bottom: 8px; color: var(--muted); font-size: 11px; }
+    .recipe-category { color: var(--accent); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+    .recipe-title { margin: 0; color: var(--green-dark); font-family: var(--serif); font-size: 25px; font-weight: 500; line-height: 1.25; }
+    .recipe-description { margin: 9px 0 15px; color: #5e5754; font-size: 13px; line-height: 1.6; }
+    .recipe-details { border-top: 1px solid var(--paper-deep); }
+    .recipe-details summary { padding: 12px 0 2px; color: var(--green); cursor: pointer; font-size: 12px; font-weight: 700; list-style-position: inside; }
+    .recipe-content { display: grid; grid-template-columns: minmax(160px, .75fr) 1.25fr; gap: 22px; padding: 14px 0 2px; }
+    .recipe-content h4 { margin: 0 0 9px; color: var(--accent); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .recipe-content ul, .recipe-content ol { margin: 0; padding-left: 18px; color: #4a4542; font-size: 13px; line-height: 1.7; }
+    .recipe-content li + li { margin-top: 4px; }
+    .recipe-note { margin: 12px 0 0; padding: 10px 12px; background: #f7eee9; color: #5a514e; font-size: 12px; line-height: 1.6; }
+    .empty-state { padding: 32px 18px; border: 1px dashed var(--line); color: var(--muted); text-align: center; }
+    .submission { margin-top: 64px; padding: clamp(24px, 5vw, 48px); border-radius: var(--radius-panel); background: var(--green-dark); color: var(--white); }
+    .submission .section-heading { margin-bottom: 9px; }
+    .submission .section-heading h2 { color: var(--white); }
+    .submission .section-heading::after { background: var(--sage); }
+    .submission-intro { max-width: 680px; margin: 0 0 25px; color: #e1e7e2; font-size: 14px; line-height: 1.7; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 17px 18px; }
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field-wide { grid-column: 1 / -1; }
+    .field label { color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+    .field input, .field select, .field textarea { width: 100%; min-height: 44px; padding: 11px 13px; border: 1px solid var(--sage); border-radius: var(--radius-control); background: #35463c; color: white; outline: none; }
+    .field input::placeholder, .field textarea::placeholder { color: #d0d9d2; }
+    .field textarea { min-height: 118px; resize: vertical; line-height: 1.55; }
+    .field-hint { color: #d0d9d2; font-size: 11px; line-height: 1.5; }
+    .form-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; margin-top: 22px; }
+    .submit-button { min-height: 46px; padding: 12px 20px; border: 1px solid var(--gold); border-radius: var(--radius-control); background: var(--gold); color: var(--green-dark); cursor: pointer; font-size: 13px; font-weight: 700; transition: background .2s, color .2s; }
+    .submit-button:hover { background: transparent; color: var(--white); }
+    .privacy-note { max-width: 500px; margin: 0; color: #d0d9d2; font-size: 11px; line-height: 1.55; }
+    .form-status { min-height: 24px; margin: 16px 0 0; color: var(--rose); font-size: 13px; line-height: 1.55; }
+    .footer { display: flex; justify-content: space-between; gap: 20px; padding: 25px 0 0; border-top: 1px solid var(--line); color: var(--muted); font-size: 11px; }
+    .footer a { color: var(--green); text-underline-offset: 3px; }
+    @media (max-width: 740px) {
+      .site { padding: 0 18px 48px; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-copy { min-height: 330px; padding: 35px 28px; }
+      .hero-image { min-height: 260px; }
+      .recipe-card { grid-template-columns: 145px minmax(0, 1fr); }
+      .recipe-content { grid-template-columns: 1fr; gap: 18px; }
+    }
+    @media (max-width: 520px) {
+      html { scroll-padding-top: 70px; }
+      .site { padding-right: 14px; padding-left: 14px; }
+      .masthead { padding: 14px 0; }
+      .masthead-actions { gap: 8px; }
+      .brand { font-size: 11px; }
+      .top-link { font-size: 11px; }
+      .hero { margin-top: 13px; }
+      .hero-copy { min-height: 310px; padding: 30px 22px; }
+      h1 { font-size: 42px; }
+      .hero-copy > p:not(.eyebrow) { font-size: 15px; }
+      .hero-image { min-height: 225px; }
+      .fact { padding: 15px 10px; }
+      .fact strong { font-size: 17px; }
+      .fact span { font-size: 9px; letter-spacing: .08em; }
+      .section { padding-top: 39px; }
+      .section-heading h2 { font-size: 25px; }
+      .intro-note { grid-template-columns: 1fr; gap: 12px; padding: 19px; }
+      .intro-note p { font-size: 16px; }
+      .catalog-tools { grid-template-columns: 1fr; }
+      .contents { grid-template-columns: 1fr; gap: 12px; }
+      .contents-block { padding: 18px; }
+      .recipe-section { padding-top: 32px; }
+      .recipe-section-title { font-size: 21px; }
+      .recipe-card { grid-template-columns: 1fr; }
+      .recipe-photo { min-height: 175px; }
+      .recipe-body { padding: 18px; }
+      .recipe-title { font-size: 23px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .field-wide { grid-column: auto; }
+      .submission { margin-top: 48px; padding: 25px 19px; }
+      .form-actions { align-items: flex-start; flex-direction: column; }
+      .footer { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="site">
+    <header class="masthead">
+      <a class="brand" href="#top"><span class="brand-mark" data-i18n="brandMark" aria-hidden="true">К</span><span data-i18n="brand">Семейная книга</span></a>
+      <div class="masthead-actions">
+        <div class="language-switch" role="group" data-i18n-aria="languageSwitch" aria-label="Язык">
+          <button class="language-button" type="button" data-set-lang="ru" aria-pressed="true">RU</button>
+          <button class="language-button" type="button" data-set-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <a class="top-link" href="#submit-recipe"><span data-i18n="addRecipe">Добавить рецепт</span> <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="heroEyebrow">Из семейной тетради</p>
+          <h1 id="page-title"><span data-i18n="heroTitleLine1">Рецепты,</span><br><span data-i18n="heroTitleLine2">которые нас собирают</span></h1>
+          <p data-i18n="heroSubtitle">Домашняя выпечка, тесто для больших планов и вкусные истории, которые хочется передавать дальше.</p>
+          <a class="hero-action" href="#catalog"><span data-i18n="openBook">Открыть книгу</span> <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="hero-image" role="img" data-i18n-aria="heroImageAlt" aria-label="Свежий хлеб на деревянном столе"></div>
+      </section>
+
+      <div class="facts" data-i18n-aria="factsAria" aria-label="О книге рецептов">
+        <div class="fact"><strong id="recipeTotal">7</strong><span data-i18n="factRecipes">рецептов в книге</span></div>
+        <div class="fact"><strong>4</strong><span data-i18n="factSections">семейных раздела</span></div>
+        <div class="fact"><strong>1</strong><span data-i18n="factKitchen">общая кухня</span></div>
+      </div>
+
+      <section class="section" aria-labelledby="welcome-title">
+        <p class="section-kicker" data-i18n="welcomeKicker">Добро пожаловать</p>
+        <div class="intro-note">
+          <p id="welcome-title" data-i18n="welcomeText">В этой книге собраны рецепты мамы, бабушки и наших друзей: любимые семейные блюда, домашняя выпечка и маленькие кулинарные открытия. Выбирайте рецепт, готовьте и дополняйте коллекцию.</p>
+          <span class="note-sign" data-i18n="welcomeSign">С любовью к домашнему</span>
+        </div>
+      </section>
+
+      <section class="section" id="catalog" aria-labelledby="catalog-title">
+        <p class="section-kicker" data-i18n="catalogKicker">Находится быстро, готовится с удовольствием</p>
+        <div class="section-heading"><h2 id="catalog-title" data-i18n="catalogTitle">Оглавление</h2></div>
+        <div class="catalog-tools">
+          <label class="search-wrap"><input class="search" id="searchInput" type="search" data-i18n-placeholder="searchPlaceholder" data-i18n-aria="searchAria" placeholder="Найти блюдо или ингредиент" aria-label="Поиск по рецептам"></label>
+          <select class="category-select" id="categoryFilter" data-i18n-aria="categoryFilterAria" aria-label="Фильтр по разделу"><option value="all" data-i18n="allCategories">Все разделы</option></select>
+        </div>
+        <div class="contents">
+          <nav class="contents-block" data-i18n-aria="contentsByCategory" aria-label="Оглавление по разделам">
+            <h3 data-i18n="byCategory">По разделам</h3>
+            <ul class="contents-list" id="sectionContents"></ul>
+          </nav>
+          <nav class="contents-block" data-i18n-aria="alphabeticalIndex" aria-label="Алфавитный указатель">
+            <h3 data-i18n="alphabetical">По алфавиту</h3>
+            <ul class="contents-list letter-list" id="letterContents"></ul>
+            <p class="recipe-count" id="recipeCount" aria-live="polite"></p>
+          </nav>
+        </div>
+        <div id="recipeSections"></div>
+      </section>
+
+      <section class="submission" id="submit-recipe" aria-labelledby="submit-title">
+        <p class="section-kicker" data-i18n="formKicker">Пополнить семейную книгу</p>
+        <div class="section-heading"><h2 id="submit-title" data-i18n="formTitle">Поделитесь своим рецептом</h2></div>
+        <p class="submission-intro" data-i18n="formIntro">Заполните рецепт подробно: ингредиенты и шаги приготовления проверяются перед отправкой. Так читателю будет проще повторить его на своей кухне.</p>
+        <form id="recipeForm" novalidate>
+          <div class="form-grid">
+            <div class="field">
+              <label for="recipeName" data-i18n="recipeNameLabel">Название рецепта *</label>
+              <input id="recipeName" name="name" type="text" maxlength="90" required data-i18n-placeholder="recipeNamePlaceholder" placeholder="Например, бабушкин яблочный пирог">
+            </div>
+            <div class="field">
+              <label for="recipeSection" data-i18n="recipeCategoryLabel">Раздел *</label>
+              <select id="recipeSection" name="category" required>
+                <option value="" data-i18n="selectCategory">Выберите раздел</option>
+                <option value="desserts" data-category="desserts">Выпечка и десерты</option>
+                <option value="dough" data-category="dough">Тесто и основы</option>
+                <option value="pizza" data-category="pizza">Пицца</option>
+                <option value="main" data-category="main">Основные блюда</option>
+                <option value="other" data-category="other">Другое</option>
+              </select>
+            </div>
+            <div class="field field-wide">
+              <label for="recipeIngredients" data-i18n="ingredientsLabel">Ингредиенты *</label>
+              <textarea id="recipeIngredients" name="ingredients" required data-i18n-placeholder="ingredientsPlaceholder" placeholder="Один ингредиент на строку:&#10;2 яйца&#10;300 г муки"></textarea>
+              <span class="field-hint" data-i18n="ingredientsHint">Не менее двух ингредиентов, каждый с новой строки.</span>
+            </div>
+            <div class="field field-wide">
+              <label for="recipeSteps" data-i18n="stepsLabel">Приготовление *</label>
+              <textarea id="recipeSteps" name="steps" required data-i18n-placeholder="stepsPlaceholder" placeholder="Опишите шаги приготовления, каждый с новой строки"></textarea>
+              <span class="field-hint" data-i18n="stepsHint">Не менее двух шагов, каждый с новой строки.</span>
+            </div>
+            <div class="field">
+              <label for="recipeAuthor" data-i18n="authorLabel">Кто поделился рецептом</label>
+              <input id="recipeAuthor" name="author" type="text" maxlength="70" data-i18n-placeholder="authorPlaceholder" placeholder="Имя или семейное прозвище">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="submit-button" type="submit" data-i18n="submitButton">Проверить и отправить</button>
+            <p class="privacy-note" data-i18n="privacyNote">В черновом режиме рецепт проходит проверку полей и сохраняется в очереди на этом устройстве. Для отправки редактору нужен подключенный сервис.</p>
+          </div>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span data-i18n="footerText">Семейная книга рецептов · собираем по кусочкам</span>
+      <a href="#top" data-i18n="backToTop">Наверх ↑</a>
+    </footer>
+  </div>
+
+  <script>
+    const recipes = [
+      {
+        id: 'apple-buns', name: 'Булочки с яблоками', categoryKey: 'desserts', time: '45 минут',
+        description: 'Половинки яблок в нежном сметанном тесте и тонкая карамельная шапочка.',
+        image: 'recipe-images/apple-buns.png',
+        ingredients: ['Вода — 50 мл', 'Масло или маргарин — 250 г', 'Сахар для карамельной шапки', 'Сметана — 250 мл', 'Мука — 500 г', 'Сода — ½ ч. л. и немного уксуса', 'Соль — по вкусу', 'Яблоки'],
+        steps: ['Мягкое масло соединить со сметаной, влить воду и перемешать.', 'Добавить гашёную уксусом соду. В муку добавить соль и постепенно вмешать её в массу. Замесить мягкое тесто и охладить в холодильнике.', 'Яблоки вымыть, при необходимости очистить, разрезать пополам и удалить сердцевину.', 'Раскатать тесто толщиной 1–1,5 см и вырезать кружки на 1 см шире половинок яблок.', 'Обернуть каждую половинку тестом, хорошо защипнуть со стороны среза. Округлой стороной окунуть в сахар.', 'Выпекать при 180–200 °C 20–25 минут.'],
+        note: 'Рецепт перенесён из семейной тетради. В исходнике масло указано как «масло/маргарин».',
+      },
+      {
+        id: 'baskets', name: 'Корзиночки', categoryKey: 'desserts', time: 'около 30 минут',
+        description: 'Песочные корзинки из металлических формочек. Начинку можно выбрать по настроению.',
+        image: 'recipe-images/baskets.png',
+        ingredients: ['Яйца — 2 шт.', 'Масло или маргарин — 200 г', 'Сахар — 125 г', 'Мука — 500 г', 'Сода — ¼ ч. л., погасить уксусом', 'Соль — ½ ч. л.', 'Сметана — количество не указано в списке ингредиентов'],
+        steps: ['Отделить желтки от белков. Белки убрать в холодильник: они могут понадобиться для безе, если корзиночки будут сладкими.', 'Мягкое масло растереть с сахаром. Добавить желтки и сметану, перемешать.', 'Добавить соль, муку и гашёную соду. Вымесить тесто, чтобы оно отставало от рук.', 'При необходимости смазать металлические формочки сливочным маслом и присыпать мукой.', 'Разделить тесто на кусочки примерно по 26–28 г, скатать шарики и распределить по формам: сначала тонкое дно, затем стенки до края.', 'Выпекать при 190 °C около 15 минут, до румяного цвета.'],
+        note: 'В приготовлении упоминается сметана, но её количество в списке ингредиентов не указано. Для сладкого варианта в исходнике предложен крем-безе.',
+      },
+      {
+        id: 'berry-pie', name: 'Пирог с ягодами', categoryKey: 'desserts', time: 'около 45 минут',
+        description: 'Открытый пирог со свежими ягодами и воздушной белковой шапкой.',
+        image: 'recipe-images/berry-pie.png',
+        ingredients: ['Яйца — 5 шт.', 'Масло или маргарин — 125 г', 'Сахар — 420 г (170 г в тесто, остальное — в белковую массу)', 'Сметана — 5 ст. л.', 'Мука — 375 г', 'Сода — ½ ч. л.', 'Фрукты или ягоды для начинки, лучше свежие'],
+        steps: ['Отделить желтки от белков. Белки убрать в холодильник, желательно в предварительно охлаждённой миске.', 'Мягкое масло растереть со 170 г сахара. Добавить желтки и сметану, перемешать.', 'Добавить соду в муку. Соединить мучную и масляную смеси до однородности.', 'Раскатать тесто по размеру формы, сформировать бортики и выложить начинку.', 'Выпекать при 180–200 °C 7–10 минут.', 'Пока основа печётся, взбить белки со стаканом сахара и охладить массу.', 'Покрыть пирог белковой массой и выпекать ещё около 30 минут.'],
+        note: 'Температура духовки и время первого этапа в исходнике указаны вместе; готовность основы лучше проверить по своей духовке. Размер стакана сахара не уточнён.',
+      },
+      {
+        id: 'universal-dough', name: 'Универсальное тесто для пирожков', categoryKey: 'dough', time: 'около 40 минут',
+        description: 'Без дрожжей: мягкая основа для пирожков с любой начинкой.',
+        image: 'recipe-images/universal-dough.png',
+        ingredients: ['Яйцо — 1 шт.', 'Масло или маргарин, размягчённое — 250 г', 'Сметана — 250 мл', 'Мука — 750 г', 'Сода — ½ ч. л. и немного уксуса', 'Соль — по вкусу', 'Начинка — любая'],
+        steps: ['Мягкое масло соединить со сметаной и перемешать.', 'Добавить гашёную уксусом соду.', 'В муку добавить соль и постепенно ввести её в масляно-сметанную смесь. Аккуратно вымесить мягкое тесто.', 'Оставить тесто отдохнуть примерно на 15 минут.', 'Раскатать пласт толщиной 1–1,5 см, вырезать кружки и сформировать пирожки с начинкой.', 'Выпекать при 180–200 °C 20–25 минут. Смазать взбитым яйцом и подрумянить ещё несколько минут.'],
+        note: 'Яйцо есть в списке ингредиентов; в исходнике отдельно сказано смазывать им пирожки перед подрумяниванием.',
+      },
+      {
+        id: 'pizza-natalia', name: 'Тесто для пиццы Натальи Вольновой', categoryKey: 'pizza', time: '7–10 минут в духовке',
+        description: 'Тонкая основа на дрожжах, с мёдом и оливковым маслом. В тетради оценена на 10 из 10.',
+        image: 'https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=900&q=80',
+        ingredients: ['Дрожжи — 1 пакетик (11 г)', 'Мёд — 1 ч. л.', 'Соль — 1 ч. л.', 'Тёплая вода — 1 стакан', 'Оливковое масло — 1 ст. л.', 'Мука — 3 стакана'],
+        steps: ['Раскатать тесто тонко.', 'Выпекать в очень хорошо разогретой духовке при 250 °C 7–10 минут.'],
+        note: 'Начинку и время подъёма теста исходный документ не уточняет.',
+      },
+      {
+        id: 'quick-dough-sour-cream', name: 'Быстрое тесто № 1', categoryKey: 'pizza', time: 'не указано',
+        description: 'Вариант быстрого теста на сметане и яйцах из подборки рецептов для пиццы.',
+        image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=900&q=80',
+        ingredients: ['Мука — 500 г (4 стакана)', 'Сметана — 1 стакан', 'Сливочное масло — 2 ст. л.', 'Яйца — 2 шт.', 'Сахар — 1 ст. л.', 'Соль — количество не указано'],
+        steps: [],
+        note: 'В документе приведены только ингредиенты; способ приготовления и режим выпечки не записаны.',
+      },
+      {
+        id: 'quick-dough-spirit', name: 'Быстрое тесто № 2', categoryKey: 'pizza', time: 'не указано',
+        description: 'Ещё один быстрый вариант теста: в составе есть маргарин и немного крепкого напитка.',
+        image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=80',
+        ingredients: ['Мука — 500 г', 'Маргарин — 200 г', 'Сахар — 1 ст. л.', 'Водка или коньяк — 2 ст. л.', 'Соль — ½ ч. л.'],
+        steps: [],
+        note: 'В документе приведены только ингредиенты; способ приготовления и режим выпечки не записаны.',
+      },
+      {
+        id: 'baked-apples-cottage-cheese', name: 'Печёные яблоки с творогом и мёдом', categoryKey: 'desserts',
+        time: '2 порции · подготовка 10 мин · готовка 15–25 мин · ~190 ккал/порция',
+        description: 'Мягкие кисло-сладкие яблоки с творожной начинкой, мёдом и корицей.',
+        image: 'https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9a?auto=format&fit=crop&w=900&q=80',
+        ingredients: ['Яблоки — 2 крупных, плотных, лучше кисло-сладких', 'Творог 5% — 100 г', 'Мёд — 2 ч. л. (по 1 ч. л. на яблоко)', 'Корица — ½ ч. л.', 'Ванильный сахар или ванилин — щепотка, по желанию', 'По желанию: горсть изюма, грецкие орехи или лимонная цедра'],
+        steps: ['Вымыть яблоки. Срезать верхушки-крышечки и удалить сердцевину, оставив дно целым.', 'Размять творог вилкой с корицей, ванилью и добавками.', 'Плотно наполнить яблоки творогом, полить мёдом и накрыть крышечками. Наколоть кожицу зубочисткой в нескольких местах.', 'В духовке: разогреть до 180 °C. Поставить яблоки в форму, добавить на дно 2–3 ст. л. воды и запекать 20–25 минут, до мягкости.', 'В аэрогриле: поставить яблоки в жаропрочную форму или на фольгу с поднятыми краями. Готовить при 180 °C 12–15 минут; крупным яблокам добавить ещё 3–5 минут.', 'Проверить готовность ножом: он должен легко входить. Если творог темнеет раньше яблок, накрыть верх фольгой.', 'Дать постоять 5 минут. Подавать тёплыми или холодными, при желании полить мёдом или выделившимся соком.'],
+        note: 'Быстрый вариант без начинки: нарезать яблоко кубиками, посыпать корицей и готовить в аэрогриле 8 минут при 180 °C. Подавать к овсянке, добавив сверху творог и мёд. Хранить в холодильнике до 2 суток; разогревать в аэрогриле 3–4 минуты при 160 °C.',
+      },
+      {
+        id: 'honey-soy-mustard-wings', name: 'Крылышки в медово-соево-горчичном соусе', categoryKey: 'main',
+        time: '2 порции · подготовка 10 мин + маринад от 30 мин · готовка 25–40 мин · ~550 ккал/порция',
+        description: 'Куриные крылышки с медово-соевой глазурью, приготовленные в духовке или аэрогриле.',
+        image: 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=900&q=80',
+        ingredients: ['Куриные крылья — 500 г', 'Соевый соус — 2 ст. л.', 'Мёд — 1 ст. л.', 'Дижонская или зернистая горчица — 1 ст. л. (или русская — 1–2 ч. л.)', 'Чеснок — 2 зубчика', 'Растительное масло — 1 ч. л.', 'Паприка — ½ ч. л.', 'Чёрный перец — по вкусу; соль не нужна', 'Кунжут или зелёный лук для подачи — по желанию'],
+        steps: ['Промыть крылья и тщательно обсушить. При желании отрезать кончики.', 'Смешать соевый соус, мёд, горчицу, выдавленный чеснок, масло, паприку и перец. Отложить 1 ст. л. маринада для финальной глазури.', 'Перемешать крылья с оставшимся маринадом и убрать в холодильник минимум на 30 минут, лучше на ночь.', 'В духовке: разогреть до 200 °C и застелить противень пергаментом. Разложить крылья одним слоем и запекать 20 минут.', 'Перевернуть крылья и запекать ещё 15 минут. Смазать отложенным маринадом и готовить ещё 5 минут до блестящей корочки.', 'В аэрогриле: разогреть до 180 °C в течение 3 минут. Выложить крылья свободно, одним слоем.', 'Готовить 12 минут при 180 °C, перевернуть и готовить ещё 8 минут. Смазать маринадом, повысить температуру до 200 °C и готовить ещё 4–5 минут.', 'Проверить готовность у кости: сок должен быть прозрачным, мясо — без розового оттенка. При использовании термометра температура внутри должна достигнуть 75 °C.', 'Подать с кунжутом или зелёным луком, салатом из капусты и моркови либо картофелем дольками.'],
+        note: 'Мёд легко пригорает, поэтому наносите глазурь только в самом конце. Если корзина аэрогриля маленькая, готовьте в два захода. Хранить в холодильнике до 2 суток; разогревать в аэрогриле 4–5 минут при 180 °C.',
+      },
+    ];
+
+    const categoryOrder = ['desserts', 'dough', 'main', 'pizza'];
+    const categories = {
+      ru: { desserts: 'Выпечка и десерты', dough: 'Тесто и основы', pizza: 'Пицца', main: 'Основные блюда', other: 'Другое' },
+      en: { desserts: 'Baking & desserts', dough: 'Dough & basics', pizza: 'Pizza', main: 'Main dishes', other: 'Other' },
+    };
+    const text = {
+      ru: {
+        title: 'Семейная книга рецептов', brandMark: 'К', brand: 'Семейная книга', languageSwitch: 'Выбор языка', addRecipe: 'Добавить рецепт', heroEyebrow: 'Из семейной тетради',
+        heroTitleLine1: 'Рецепты,', heroTitleLine2: 'которые нас собирают', heroSubtitle: 'Домашняя выпечка, тесто для больших планов и вкусные истории, которые хочется передавать дальше.',
+        openBook: 'Открыть книгу', heroImageAlt: 'Свежая выпечка на столе', factsAria: 'О книге рецептов', factRecipes: 'рецептов в книге', factSections: 'семейных раздела', factKitchen: 'общая кухня',
+        welcomeKicker: 'Добро пожаловать', welcomeText: 'В этой книге собраны рецепты мамы, бабушки и наших друзей: любимые семейные блюда, домашняя выпечка и маленькие кулинарные открытия. Выбирайте рецепт, готовьте и дополняйте коллекцию.',
+        welcomeSign: 'С любовью к домашнему', catalogKicker: 'Находится быстро, готовится с удовольствием', catalogTitle: 'Оглавление', searchPlaceholder: 'Найти блюдо или ингредиент',
+        searchAria: 'Поиск по рецептам', categoryFilterAria: 'Фильтр по разделу', allCategories: 'Все разделы', contentsByCategory: 'Оглавление по разделам',
+        byCategory: 'По разделам', alphabeticalIndex: 'Алфавитный указатель', alphabetical: 'По алфавиту', shownCount: 'Показано: {shown} из {total}',
+        recipeSingular: 'рецепт', recipePlural: 'рецепта', recipeMany: 'рецептов', ingredients: 'Ингредиенты', preparation: 'Приготовление',
+        notebookEntry: 'Запись в тетради', missingSteps: 'Способ приготовления не записан в исходном документе.', illustration: 'Иллюстрация: {name}',
+        emptySearch: 'Ничего не нашлось. Попробуйте изменить запрос или раздел.', formKicker: 'Пополнить семейную книгу', formTitle: 'Поделитесь своим рецептом',
+        formIntro: 'Заполните рецепт подробно: ингредиенты и шаги приготовления проверяются перед отправкой. Так читателю будет проще повторить его на своей кухне.',
+        recipeNameLabel: 'Название рецепта *', recipeNamePlaceholder: 'Например, бабушкин яблочный пирог', recipeCategoryLabel: 'Раздел *', selectCategory: 'Выберите раздел',
+        ingredientsLabel: 'Ингредиенты *', ingredientsPlaceholder: 'Один ингредиент на строку:\n2 яйца\n300 г муки', ingredientsHint: 'Не менее двух ингредиентов, каждый с новой строки.',
+        stepsLabel: 'Приготовление *', stepsPlaceholder: 'Опишите шаги приготовления, каждый с новой строки', stepsHint: 'Не менее двух шагов, каждый с новой строки.',
+        authorLabel: 'Кто поделился рецептом', authorPlaceholder: 'Имя или семейное прозвище', submitButton: 'Проверить и отправить',
+        privacyNote: 'В черновом режиме рецепт проходит проверку полей и сохраняется в очереди на этом устройстве. Для отправки редактору нужен подключенный сервис.',
+        footerText: 'Семейная книга рецептов · собираем по кусочкам', backToTop: 'Наверх ↑',
+        invalidIngredients: 'Добавьте не менее двух ингредиентов, каждый с новой строки.', invalidSteps: 'Опишите не менее двух шагов приготовления, каждый с новой строки.',
+        invalidForm: 'Проверьте заполнение обязательных полей.', recipeSent: 'Рецепт передан на проверку. Спасибо, что пополняете семейную книгу!',
+        sendFailed: 'Не получилось отправить рецепт. Проверьте соединение и попробуйте ещё раз.',
+        localSaved: 'Проверка пройдена. Рецепт сохранён в локальной очереди на этом устройстве; для передачи редактору нужно подключить отправку.',
+        localSaveFailed: 'Проверка пройдена, но браузер не разрешил сохранить черновик. Подключите сервис отправки рецептов.',
+      },
+      en: {
+        title: 'Family Recipe Book', brandMark: 'F', brand: 'Family Recipe Book', languageSwitch: 'Choose language', addRecipe: 'Add a recipe', heroEyebrow: 'From our family notebook',
+        heroTitleLine1: 'Recipes', heroTitleLine2: 'that bring us together', heroSubtitle: 'Home baking, dough for big plans, and the kind of food stories worth passing down.',
+        openBook: 'Browse the book', heroImageAlt: 'Fresh homemade baking on a table', factsAria: 'About the recipe book', factRecipes: 'recipes in the book', factSections: 'family sections', factKitchen: 'shared kitchen',
+        welcomeKicker: 'Welcome', welcomeText: 'This book brings together recipes from Mum, Grandma, and our friends: family favourites, homemade baking, and little kitchen discoveries. Pick a recipe, make it, and add to the collection.',
+        welcomeSign: 'Made with love at home', catalogKicker: 'Easy to find, lovely to make', catalogTitle: 'Recipe index', searchPlaceholder: 'Search by recipe or ingredient',
+        searchAria: 'Search recipes', categoryFilterAria: 'Filter by category', allCategories: 'All categories', contentsByCategory: 'Browse by category',
+        byCategory: 'By category', alphabeticalIndex: 'Alphabetical recipe index', alphabetical: 'A to Z', shownCount: 'Showing {shown} of {total}',
+        recipeSingular: 'recipe', recipePlural: 'recipes', recipeMany: 'recipes', ingredients: 'Ingredients', preparation: 'Method',
+        notebookEntry: 'From the notebook', missingSteps: 'The original document does not include preparation instructions.', illustration: 'Photo: {name}',
+        emptySearch: 'No recipes found. Try another search or category.', formKicker: 'Add to the family collection', formTitle: 'Share a recipe',
+        formIntro: 'Include the ingredients and method. Every submission is checked before it is added so others can recreate it in their own kitchen.',
+        recipeNameLabel: 'Recipe name *', recipeNamePlaceholder: 'For example, Grandma’s apple pie', recipeCategoryLabel: 'Category *', selectCategory: 'Choose a category',
+        ingredientsLabel: 'Ingredients *', ingredientsPlaceholder: 'One ingredient per line:\n2 eggs\n300 g flour', ingredientsHint: 'Add at least two ingredients, one per line.',
+        stepsLabel: 'Method *', stepsPlaceholder: 'Describe the method, one step per line', stepsHint: 'Add at least two steps, one per line.',
+        authorLabel: 'Contributed by', authorPlaceholder: 'Name or family nickname', submitButton: 'Check and submit',
+        privacyNote: 'Your recipe is checked and saved to this device’s local queue in draft mode. A connected service is needed to send it to the editor.',
+        footerText: 'The family recipe book · made one recipe at a time', backToTop: 'Back to top ↑',
+        invalidIngredients: 'Add at least two ingredients, one per line.', invalidSteps: 'Add at least two preparation steps, one per line.',
+        invalidForm: 'Please check the required fields.', recipeSent: 'Your recipe has been submitted for review. Thanks for adding to the family book!',
+        sendFailed: 'The recipe could not be sent. Check your connection and try again.',
+        localSaved: 'Your recipe passed validation and was saved to this device’s local queue. Connect a submission service to send it to the editor.',
+        localSaveFailed: 'Validation passed, but the browser could not save the draft. Connect a recipe submission service.',
+      },
+    };
+    const recipeText = {
+      'apple-buns': {
+        name: 'Apple buns', category: 'Baking & desserts', time: 'About 45 minutes',
+        description: 'Apple halves wrapped in tender sour-cream pastry, finished with a crisp caramelised sugar top.',
+        ingredients: ['Water — 50 ml', 'Butter or margarine — 250 g', 'Sugar for the caramelised tops', 'Sour cream — 250 ml', 'Flour — 500 g', 'Baking soda — ½ tsp, plus a little vinegar', 'Salt — to taste', 'Apples'],
+        steps: ['Mix the softened butter with the sour cream, add the water, and stir.', 'Add the baking soda fizzed with vinegar. Salt the flour and gradually work it into the mixture. Knead a soft dough and chill it in the fridge.', 'Wash the apples, peel if desired, halve them, and remove the cores.', 'Roll the dough 1–1.5 cm thick and cut circles about 1 cm wider than the apple halves.', 'Wrap each apple half in dough and seal firmly along the cut side. Dip the rounded top in sugar.', 'Bake at 180–200 °C for 20–25 minutes.'],
+        note: 'Transcribed from the family notebook. The original lists either butter or margarine.',
+      },
+      baskets: {
+        name: 'Pastry tartlet shells', category: 'Baking & desserts', time: 'About 30 minutes',
+        description: 'Shortcrust shells baked in metal moulds, ready for a filling of your choice.',
+        ingredients: ['Eggs — 2', 'Butter or margarine — 200 g', 'Sugar — 125 g', 'Flour — 500 g', 'Baking soda — ¼ tsp, dissolved with vinegar', 'Salt — ½ tsp', 'Sour cream — amount missing from the ingredient list'],
+        steps: ['Separate the yolks and whites. Refrigerate the whites; they may be used for meringue if making sweet tartlets.', 'Rub the softened butter and sugar together. Add the yolks and sour cream; mix.', 'Add the salt, flour, and fizzed baking soda. Knead until the dough no longer sticks to your hands.', 'If needed, lightly butter the metal moulds and dust them with flour.', 'Divide the dough into pieces of about 26–28 g, roll into balls, and press into the moulds: make a thinner base, then bring the dough up the sides.', 'Bake at 190 °C for about 15 minutes, until golden.'],
+        note: 'Sour cream is mentioned in the method, but its amount is missing from the ingredient list. The original suggests meringue for a sweet version.',
+      },
+      'berry-pie': {
+        name: 'Berry pie', category: 'Baking & desserts', time: 'About 45 minutes',
+        description: 'An open fruit or berry pie topped with a light meringue layer.',
+        ingredients: ['Eggs — 5', 'Butter or margarine — 125 g', 'Sugar — 420 g (170 g for the dough, the rest for the meringue)', 'Sour cream — 5 tbsp', 'Flour — 375 g', 'Baking soda — ½ tsp', 'Fruit or berries for the filling, preferably fresh'],
+        steps: ['Separate the yolks and whites. Chill the whites, ideally in a pre-chilled bowl.', 'Rub the softened butter with 170 g of sugar. Add the yolks and sour cream; mix.', 'Stir the baking soda into the flour. Combine the flour and butter mixtures until smooth.', 'Roll the dough to fit the baking tin, form a rim, and add the filling.', 'Bake at 180–200 °C for 7–10 minutes.', 'While the base bakes, whip the egg whites with a glass of sugar and chill the mixture.', 'Spread the meringue over the pie and bake for about 30 more minutes.'],
+        note: 'The original gives the oven temperature and first baking time together; check the base in your own oven. The size of the sugar glass is not specified.',
+      },
+      'universal-dough': {
+        name: 'All-purpose dough for hand pies', category: 'Dough & basics', time: 'About 40 minutes',
+        description: 'A soft, yeast-free dough for hand pies with any filling.',
+        ingredients: ['Egg — 1', 'Softened butter or margarine — 250 g', 'Sour cream — 250 ml', 'Flour — 750 g', 'Baking soda — ½ tsp, plus a little vinegar', 'Salt — to taste', 'Filling of your choice'],
+        steps: ['Mix the softened butter with the sour cream.', 'Add the baking soda fizzed with vinegar.', 'Salt the flour and gradually work it into the butter mixture. Knead gently until soft.', 'Leave the dough to rest for about 15 minutes.', 'Roll the dough 1–1.5 cm thick, cut out circles, and shape the pies with your filling.', 'Bake at 180–200 °C for 20–25 minutes. Brush with beaten egg and bake for a few more minutes until golden.'],
+        note: 'An egg is listed among the ingredients; the original also says to brush the pies with beaten egg before browning.',
+      },
+      'pizza-natalia': {
+        name: 'Natalia Volnova’s pizza dough', category: 'Pizza', time: '7–10 minutes in the oven',
+        description: 'A thin yeast dough with honey and olive oil. The family notebook rates it 10 out of 10.',
+        ingredients: ['Yeast — 1 sachet (11 g)', 'Honey — 1 tsp', 'Salt — 1 tsp', 'Warm water — 1 cup', 'Olive oil — 1 tbsp', 'Flour — 3 cups'],
+        steps: ['Roll the dough out thinly.', 'Bake in a very hot oven at 250 °C for 7–10 minutes.'],
+        note: 'The original document does not specify a topping or proving time.',
+      },
+      'quick-dough-sour-cream': {
+        name: 'Quick dough No. 1', category: 'Pizza', time: 'Not specified',
+        description: 'A quick sour-cream dough with eggs from the pizza recipe collection.',
+        ingredients: ['Flour — 500 g (4 cups)', 'Sour cream — 1 cup', 'Butter — 2 tbsp', 'Eggs — 2', 'Sugar — 1 tbsp', 'Salt — amount not specified'],
+        steps: [],
+        note: 'The document lists ingredients only; preparation steps and baking instructions are not included.',
+      },
+      'quick-dough-spirit': {
+        name: 'Quick dough No. 2', category: 'Pizza', time: 'Not specified',
+        description: 'Another quick dough variation made with margarine and a little vodka or brandy.',
+        ingredients: ['Flour — 500 g', 'Margarine — 200 g', 'Sugar — 1 tbsp', 'Vodka or brandy — 2 tbsp', 'Salt — ½ tsp'],
+        steps: [],
+        note: 'The document lists ingredients only; preparation steps and baking instructions are not included.',
+      },
+      'baked-apples-cottage-cheese': {
+        name: 'Baked apples with cottage cheese and honey', category: 'Baking & desserts',
+        time: '2 servings · 10 min prep · 15–25 min cooking · ~190 kcal per serving',
+        description: 'Tender tart-sweet apples filled with cottage cheese, honey, and cinnamon.',
+        ingredients: ['Large firm tart-sweet apples — 2', '5% cottage cheese — 100 g', 'Honey — 2 tsp (1 tsp per apple)', 'Cinnamon — ½ tsp', 'Vanilla sugar or vanilla — a pinch, optional', 'Optional: a handful of raisins, walnuts, or lemon zest'],
+        steps: ['Wash the apples. Cut off the tops as lids and remove the cores, keeping the bases intact.', 'Mash the cottage cheese with a fork and mix in the cinnamon, vanilla, and any optional additions.', 'Fill the apples firmly with the cottage-cheese mixture, drizzle with honey, and replace the lids. Prick the skins in a few places with a toothpick.', 'Oven: preheat to 180 °C. Place the apples in a baking dish, add 2–3 tbsp water to the dish, and bake for 20–25 minutes until tender.', 'Air fryer: place the apples in a small ovenproof dish or on foil with raised edges. Cook at 180 °C for 12–15 minutes; add 3–5 minutes for larger apples.', 'Test with a knife; it should slide in easily. If the filling browns before the apples soften, cover the tops with foil.', 'Rest for 5 minutes. Serve warm or cold, with extra honey or the cooking juices if desired.'],
+        note: 'Quick version without filling: dice an apple, sprinkle with cinnamon, and air-fry at 180 °C for 8 minutes. Serve over porridge, adding cottage cheese and honey on top. Refrigerate for up to 2 days; reheat in the air fryer at 160 °C for 3–4 minutes.',
+      },
+      'honey-soy-mustard-wings': {
+        name: 'Honey, soy & mustard chicken wings', category: 'Main dishes',
+        time: '2 servings · 10 min prep + at least 30 min marinating · 25–40 min cooking · ~550 kcal per serving',
+        description: 'Chicken wings with a honey-soy glaze, cooked in the oven or air fryer.',
+        ingredients: ['Chicken wings — 500 g', 'Soy sauce — 2 tbsp', 'Honey — 1 tbsp', 'Dijon or wholegrain mustard — 1 tbsp (or hot English mustard — 1–2 tsp)', 'Garlic — 2 cloves', 'Vegetable oil — 1 tsp', 'Paprika — ½ tsp', 'Black pepper — to taste; no extra salt needed', 'Sesame seeds or spring onions to serve — optional'],
+        steps: ['Rinse the wings and pat them thoroughly dry. Trim the tips if desired.', 'Mix the soy sauce, honey, mustard, crushed garlic, oil, paprika, and pepper. Set aside 1 tbsp of the marinade for the final glaze.', 'Toss the wings in the remaining marinade and refrigerate for at least 30 minutes, preferably overnight.', 'Oven: preheat to 200 °C and line a baking tray with parchment. Arrange the wings in one layer and bake for 20 minutes.', 'Turn the wings and bake for another 15 minutes. Brush with the reserved marinade and cook for 5 more minutes until glossy.', 'Air fryer: preheat to 180 °C for 3 minutes. Arrange the wings in a single, uncrowded layer.', 'Cook at 180 °C for 12 minutes, turn, and cook for 8 more minutes. Brush with the reserved marinade, raise the temperature to 200 °C, and cook for 4–5 minutes.', 'Check near the bone: the juices should run clear and the meat should not be pink. If using a thermometer, the internal temperature should reach 75 °C.', 'Serve with sesame seeds or spring onions, cabbage and carrot salad, or air-fryer potato wedges.'],
+        note: 'Honey burns easily, so brush on the glaze only at the very end. Cook in batches if the air-fryer basket is small. Refrigerate for up to 2 days; reheat in the air fryer at 180 °C for 4–5 minutes.',
+      },
+    };
+    const sectionContents = document.getElementById('sectionContents');
+    const letterContents = document.getElementById('letterContents');
+    const recipeSections = document.getElementById('recipeSections');
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const recipeCount = document.getElementById('recipeCount');
+    const formStatus = document.getElementById('formStatus');
+    const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwVAvCiXRv2gcdNj8PsgyWxVk8-0Va4j8fQ39gvV89K2koNHTZMGyg1ixlnDfri3YoB/exec';
+    let currentLanguage = localStorage.getItem('recipeBookLanguage') === 'en' ? 'en' : 'ru';
+
+    if (FORM_ENDPOINT && !sessionStorage.getItem('viewNotified')) {
+      const viewEvent = new URLSearchParams({
+        type: 'view',
+        page: location.pathname,
+      });
+
+      if (navigator.sendBeacon(FORM_ENDPOINT, viewEvent)) {
+        sessionStorage.setItem('viewNotified', '1');
+      }
+    }
+
+    function make(tag, className, text) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      if (text !== undefined) element.textContent = text;
+      return element;
+    }
+
+    function currentText(recipe) {
+      return currentLanguage === 'en' ? recipeText[recipe.id] : recipe;
+    }
+
+    function localizedCategory(categoryKey) {
+      return categories[currentLanguage][categoryKey] || categoryKey;
+    }
+
+    function translate(key) {
+      return text[currentLanguage][key];
+    }
+
+    function recipeCountLabel(count) {
+      if (currentLanguage === 'en') return count === 1 ? 'recipe' : 'recipes';
+      const lastTwo = count % 100;
+      const last = count % 10;
+      if (lastTwo >= 11 && lastTwo <= 14) return 'рецептов';
+      if (last === 1) return 'рецепт';
+      if (last >= 2 && last <= 4) return 'рецепта';
+      return 'рецептов';
+    }
+
+    function setLanguage(language) {
+      currentLanguage = language;
+      localStorage.setItem('recipeBookLanguage', language);
+      document.documentElement.lang = language;
+      document.title = translate('title');
+
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        element.textContent = translate(element.dataset.i18n);
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
+        element.placeholder = translate(element.dataset.i18nPlaceholder);
+      });
+      document.querySelectorAll('[data-i18n-aria]').forEach(element => {
+        element.setAttribute('aria-label', translate(element.dataset.i18nAria));
+      });
+      document.querySelectorAll('[data-category]').forEach(option => {
+        option.textContent = localizedCategory(option.dataset.category);
+      });
+      document.querySelectorAll('[data-set-lang]').forEach(button => {
+        button.setAttribute('aria-pressed', String(button.dataset.setLang === language));
+      });
+
+      formStatus.textContent = '';
+      renderContents();
+      renderRecipes();
+    }
+
+    function renderContents() {
+      sectionContents.replaceChildren();
+      letterContents.replaceChildren();
+      categoryFilter.replaceChildren(new Option(translate('allCategories'), 'all'));
+
+      categoryOrder.forEach(category => {
+        const categoryRecipes = recipes.filter(recipe => recipe.categoryKey === category);
+        if (!categoryRecipes.length) return;
+        const item = make('li');
+        const link = make('a', '', `${localizedCategory(category)} (${categoryRecipes.length})`);
+        link.href = `#section-${categoryOrder.indexOf(category)}`;
+        item.append(link);
+        sectionContents.append(item);
+        const option = make('option', '', localizedCategory(category));
+        option.value = category;
+        categoryFilter.append(option);
+      });
+
+      [...recipes].sort((a, b) => currentText(a).name.localeCompare(currentText(b).name, currentLanguage)).forEach(recipe => {
+        const localized = currentText(recipe);
+        const item = make('li');
+        const link = make('a');
+        link.href = `#${recipe.id}`;
+        link.append(make('span', 'alpha-letter', localized.name[0].toLocaleUpperCase(currentLanguage)));
+        link.append(document.createTextNode(' · '));
+        link.append(document.createTextNode(localized.name));
+        item.append(link);
+        letterContents.append(item);
+      });
+    }
+
+    function createRecipeCard(recipe) {
+      const localized = currentText(recipe);
+      const card = make('article', 'recipe-card');
+      card.id = recipe.id;
+      card.dataset.category = recipe.categoryKey;
+      card.dataset.search = [recipe.name, recipe.categoryKey, recipe.description, ...recipe.ingredients,
+        localized.name, localized.category, localized.description, ...localized.ingredients].join(' ').toLocaleLowerCase(currentLanguage);
+      card.dataset.letter = localized.name[0].toLocaleUpperCase(currentLanguage);
+
+      const photo = make('div', 'recipe-photo');
+      photo.setAttribute('role', 'img');
+      photo.setAttribute('aria-label', translate('illustration').replace('{name}', localized.name));
+      photo.style.backgroundImage = `url("${recipe.image}")`;
+      card.append(photo);
+
+      const body = make('div', 'recipe-body');
+      const meta = make('div', 'recipe-meta');
+      meta.append(make('span', 'recipe-category', localized.category), make('span', '', localized.time));
+      body.append(meta, make('h4', 'recipe-title', localized.name), make('p', 'recipe-description', localized.description));
+
+      const details = make('details', 'recipe-details');
+      const summary = make('summary', '', `${translate('ingredients')} & ${translate('preparation')}`);
+      const content = make('div', 'recipe-content');
+      const ingredientsSection = make('section');
+      ingredientsSection.append(make('h4', '', translate('ingredients')));
+      const ingredients = make('ul');
+      localized.ingredients.forEach(ingredient => ingredients.append(make('li', '', ingredient)));
+      ingredientsSection.append(ingredients);
+      const stepsSection = make('section');
+      stepsSection.append(make('h4', '', localized.steps.length ? translate('preparation') : translate('notebookEntry')));
+      if (localized.steps.length) {
+        const steps = make('ol');
+        localized.steps.forEach(step => steps.append(make('li', '', step)));
+        stepsSection.append(steps);
+      } else {
+        stepsSection.append(make('p', 'recipe-note', translate('missingSteps')));
+      }
+      content.append(ingredientsSection, stepsSection);
+      details.append(summary, content);
+      if (localized.note) details.append(make('p', 'recipe-note', localized.note));
+      body.append(details);
+      card.append(body);
+      return card;
+    }
+
+    function renderRecipes() {
+      const query = searchInput.value.trim().toLocaleLowerCase(currentLanguage);
+      const category = categoryFilter.value;
+      const visibleRecipes = recipes.filter(recipe => {
+        const localized = currentText(recipe);
+        const matchesText = !query || [recipe.name, recipe.description, ...recipe.ingredients, localized.name, localized.description, ...localized.ingredients]
+          .join(' ').toLocaleLowerCase(currentLanguage).includes(query);
+        return matchesText && (category === 'all' || recipe.categoryKey === category);
+      });
+      recipeSections.replaceChildren();
+
+      categoryOrder.forEach((section, index) => {
+        const sectionRecipes = visibleRecipes.filter(recipe => recipe.categoryKey === section);
+        if (!sectionRecipes.length) return;
+        const sectionElement = make('section', 'recipe-section');
+        sectionElement.id = `section-${index}`;
+        sectionElement.setAttribute('aria-labelledby', `heading-${index}`);
+        const title = make('h3', 'recipe-section-title');
+        title.id = `heading-${index}`;
+        title.append(document.createTextNode(localizedCategory(section)));
+        title.append(make('small', '', `${sectionRecipes.length} ${recipeCountLabel(sectionRecipes.length)}`));
+        const list = make('div', 'recipe-list');
+        sectionRecipes.forEach(recipe => list.append(createRecipeCard(recipe)));
+        sectionElement.append(title, list);
+        recipeSections.append(sectionElement);
+      });
+
+      if (!visibleRecipes.length) recipeSections.append(make('p', 'empty-state', translate('emptySearch')));
+      recipeCount.textContent = translate('shownCount').replace('{shown}', visibleRecipes.length).replace('{total}', recipes.length);
+      document.getElementById('recipeTotal').textContent = String(recipes.length);
+    }
+
+    document.querySelectorAll('[data-set-lang]').forEach(button => {
+      button.addEventListener('click', () => setLanguage(button.dataset.setLang));
+    });
+    setLanguage(currentLanguage);
+    searchInput.addEventListener('input', renderRecipes);
+    categoryFilter.addEventListener('change', renderRecipes);
+
+    document.getElementById('recipeForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const data = new FormData(form);
+      const ingredients = String(data.get('ingredients') || '').split('\n').map(line => line.trim()).filter(Boolean);
+      const steps = String(data.get('steps') || '').split('\n').map(line => line.trim()).filter(Boolean);
+      const invalid = !form.reportValidity() || ingredients.length < 2 || steps.length < 2;
+
+      if (invalid) {
+        formStatus.textContent = ingredients.length < 2
+          ? translate('invalidIngredients')
+          : steps.length < 2
+            ? translate('invalidSteps')
+            : translate('invalidForm');
+        return;
+      }
+
+      const submission = {
+        name: String(data.get('name')).trim(),
+        category: localizedCategory(String(data.get('category'))),
+        ingredients,
+        steps,
+        author: String(data.get('author') || '').trim(),
+        submittedAt: new Date().toISOString(),
+        status: 'pending_review',
+      };
+
+      if (FORM_ENDPOINT) {
+        const recipeEvent = new URLSearchParams({
+          type: 'recipe',
+          payload: JSON.stringify(submission),
+        });
+
+        if (navigator.sendBeacon(FORM_ENDPOINT, recipeEvent)) {
+          formStatus.textContent = translate('recipeSent');
+          form.reset();
+        } else {
+          formStatus.textContent = translate('sendFailed');
+        }
+        return;
+      }
+
+      try {
+        const queue = JSON.parse(localStorage.getItem('familyRecipeSubmissions') || '[]');
+        queue.push(submission);
+        localStorage.setItem('familyRecipeSubmissions', JSON.stringify(queue));
+        formStatus.textContent = translate('localSaved');
+        form.reset();
+      } catch {
+        formStatus.textContent = translate('localSaveFailed');
+      }
+    });
+  </script>
+</body>
+</html>
