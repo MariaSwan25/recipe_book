@@ -246,14 +246,15 @@
         <div class="section-heading"><h2 id="submit-title" data-i18n="formTitle">Поделитесь своим рецептом</h2></div>
         <p class="submission-intro" data-i18n="formIntro">Заполните рецепт подробно: ингредиенты и шаги приготовления проверяются перед отправкой. Так читателю будет проще повторить его на своей кухне.</p>
         <form id="recipeForm" novalidate>
+          <input type="hidden" name="action" value="recipe">
           <div class="form-grid">
             <div class="field">
               <label for="recipeName" data-i18n="recipeNameLabel">Название рецепта *</label>
-              <input id="recipeName" name="name" type="text" maxlength="90" required data-i18n-placeholder="recipeNamePlaceholder" placeholder="Например, бабушкин яблочный пирог">
+              <input id="recipeName" name="title" type="text" maxlength="90" required data-i18n-placeholder="recipeNamePlaceholder" placeholder="Например, бабушкин яблочный пирог">
             </div>
             <div class="field">
               <label for="recipeSection" data-i18n="recipeCategoryLabel">Раздел *</label>
-              <select id="recipeSection" name="category" required>
+              <select id="recipeSection" name="chapter" required>
                 <option value="" data-i18n="selectCategory">Выберите раздел</option>
                 <option value="desserts" data-category="desserts">Выпечка и десерты</option>
                 <option value="dough" data-category="dough">Тесто и основы</option>
@@ -269,12 +270,12 @@
             </div>
             <div class="field field-wide">
               <label for="recipeSteps" data-i18n="stepsLabel">Приготовление *</label>
-              <textarea id="recipeSteps" name="steps" required data-i18n-placeholder="stepsPlaceholder" placeholder="Опишите шаги приготовления, каждый с новой строки"></textarea>
+              <textarea id="recipeSteps" name="preparation" required data-i18n-placeholder="stepsPlaceholder" placeholder="Опишите шаги приготовления, каждый с новой строки"></textarea>
               <span class="field-hint" data-i18n="stepsHint">Не менее двух шагов, каждый с новой строки.</span>
             </div>
             <div class="field">
               <label for="recipeAuthor" data-i18n="authorLabel">Кто поделился рецептом</label>
-              <input id="recipeAuthor" name="author" type="text" maxlength="70" data-i18n-placeholder="authorPlaceholder" placeholder="Имя или семейное прозвище">
+              <input id="recipeAuthor" name="name" type="text" maxlength="70" data-i18n-placeholder="authorPlaceholder" placeholder="Имя или семейное прозвище">
             </div>
           </div>
           <div class="form-actions">
@@ -921,7 +922,7 @@
       const form = event.currentTarget;
       const data = new FormData(form);
       const ingredients = String(data.get('ingredients') || '').split('\n').map(line => line.trim()).filter(Boolean);
-      const steps = String(data.get('steps') || '').split('\n').map(line => line.trim()).filter(Boolean);
+      const steps = String(data.get('preparation') || '').split('\n').map(line => line.trim()).filter(Boolean);
       const invalid = !form.reportValidity() || ingredients.length < 2 || steps.length < 2;
 
       if (invalid) {
@@ -934,11 +935,11 @@
       }
 
       const submission = {
-        name: String(data.get('name')).trim(),
-        category: localizedCategory(String(data.get('category'))),
+        name: String(data.get('title')).trim(),
+        category: localizedCategory(String(data.get('chapter'))),
         ingredients,
         steps,
-        author: String(data.get('author') || '').trim(),
+        author: String(data.get('name') || '').trim(),
         submittedAt: new Date().toISOString(),
         status: 'pending_review',
       };
