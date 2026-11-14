@@ -280,7 +280,7 @@
           </div>
           <div class="form-actions">
             <button class="submit-button" type="submit" data-i18n="submitButton">Проверить и отправить</button>
-            <p class="privacy-note" data-i18n="privacyNote">В черновом режиме рецепт проходит проверку полей и сохраняется в очереди на этом устройстве. Для отправки редактору нужен подключенный сервис.</p>
+            <p class="privacy-note" data-i18n="privacyNote">Перед добавлением в книгу каждый рецепт проверяется редактором.</p>
           </div>
           <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
         </form>
@@ -482,7 +482,7 @@
         ingredientsLabel: 'Ингредиенты *', ingredientsPlaceholder: 'Один ингредиент на строку:\n2 яйца\n300 г муки', ingredientsHint: 'Не менее двух ингредиентов, каждый с новой строки.',
         stepsLabel: 'Приготовление *', stepsPlaceholder: 'Опишите шаги приготовления, каждый с новой строки', stepsHint: 'Не менее двух шагов, каждый с новой строки.',
         authorLabel: 'Кто поделился рецептом', authorPlaceholder: 'Имя или семейное прозвище', submitButton: 'Проверить и отправить',
-        privacyNote: 'В черновом режиме рецепт проходит проверку полей и сохраняется в очереди на этом устройстве. Для отправки редактору нужен подключенный сервис.',
+        privacyNote: 'Перед добавлением в книгу каждый рецепт проверяется редактором.',
         footerText: 'Семейная книга рецептов · собираем по кусочкам', backToTop: 'Наверх ↑',
         invalidIngredients: 'Добавьте не менее двух ингредиентов, каждый с новой строки.', invalidSteps: 'Опишите не менее двух шагов приготовления, каждый с новой строки.',
         invalidForm: 'Проверьте заполнение обязательных полей.', recipeSent: 'Рецепт передан на проверку. Спасибо, что пополняете семейную книгу!',
@@ -507,7 +507,7 @@
         ingredientsLabel: 'Ingredients *', ingredientsPlaceholder: 'One ingredient per line:\n2 eggs\n300 g flour', ingredientsHint: 'Add at least two ingredients, one per line.',
         stepsLabel: 'Method *', stepsPlaceholder: 'Describe the method, one step per line', stepsHint: 'Add at least two steps, one per line.',
         authorLabel: 'Contributed by', authorPlaceholder: 'Name or family nickname', submitButton: 'Check and submit',
-        privacyNote: 'Your recipe is checked and saved to this device’s local queue in draft mode. A connected service is needed to send it to the editor.',
+        privacyNote: 'Every recipe is reviewed by the editor before it is added to the book.',
         footerText: 'The family recipe book · made one recipe at a time', backToTop: 'Back to top ↑',
         invalidIngredients: 'Add at least two ingredients, one per line.', invalidSteps: 'Add at least two preparation steps, one per line.',
         invalidForm: 'Please check the required fields.', recipeSent: 'Your recipe has been submitted for review. Thanks for adding to the family book!',
@@ -670,15 +670,18 @@
     const FORM_ENDPOINT = 'https://script.google.com/macros/s/AKfycbwMSNwRYGpmVSt2dcYFhwegE4VZiWL_MQSbKI0e2pH3gpUDZQHLUbzKvsJk5FbR7ug/exec';
     let currentLanguage = localStorage.getItem('recipeBookLanguage') === 'en' ? 'en' : 'ru';
 
+    // 1. Уведомление об открытии сайта (один раз за сессию)
     if (FORM_ENDPOINT && !sessionStorage.getItem('viewNotified')) {
       const viewEvent = new URLSearchParams({
-        type: 'view',
+        action: 'view',
         page: location.pathname,
       });
 
-      if (navigator.sendBeacon(FORM_ENDPOINT, viewEvent)) {
-        sessionStorage.setItem('viewNotified', '1');
-      }
+      fetch(`${FORM_ENDPOINT}?${viewEvent}`, { mode: 'no-cors' })
+        .then(() => {
+          try { sessionStorage.setItem('viewNotified', '1'); } catch {}
+        })
+        .catch(() => {});
     }
 
     function make(tag, className, text) {
@@ -838,6 +841,16 @@
           input.addEventListener('change', () => {
             selectedRating = Number(input.value);
             localStorage.setItem(ratingKey, String(selectedRating));
+
+            // 3. Отправка оценки в таблицу и Telegram
+            if (FORM_ENDPOINT) {
+              const rateEvent = new URLSearchParams({
+                action: 'rate',
+                recipe: recipe.name,
+                rating: String(selectedRating),
+              });
+              fetch(`${FORM_ENDPOINT}?${rateEvent}`, { mode: 'no-cors' }).catch(() => {});
+            }
             updateRatingImages();
             ratingStatus.textContent = translate('ratingSaved').replace('{rating}', formatRating(selectedRating));
           });
@@ -945,16 +958,26 @@
       };
 
       if (FORM_ENDPOINT) {
+        // 2. Отправка рецепта: поля в том виде, который ждёт Apps Script
         const recipeEvent = new URLSearchParams({
-          type: 'recipe',
-          payload: JSON.stringify(submission),
+          action: 'recipe',
+          title: submission.name,
+          chapter: submission.category,
+          ingredients: ingredients.join('\n'),
+          preparation: steps.join('\n'),
+          name: submission.author,
         });
 
-        if (navigator.sendBeacon(FORM_ENDPOINT, recipeEvent)) {
+        const submitButton = form.querySelector('[type="submit"]');
+        if (submitButton) submitButton.disabled = true;
+        try {
+          await fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', body: recipeEvent });
           formStatus.textContent = translate('recipeSent');
           form.reset();
-        } else {
+        } catch {
           formStatus.textContent = translate('sendFailed');
+        } finally {
+          if (submitButton) submitButton.disabled = false;
         }
         return;
       }
