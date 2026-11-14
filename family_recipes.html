@@ -36,7 +36,8 @@
     .site { max-width: 1180px; margin: auto; padding: 0 34px 72px; }
     .masthead { display: flex; justify-content: space-between; align-items: center; padding: 19px 0; border-bottom: 1px solid var(--line); }
     .brand { display: inline-flex; gap: 10px; align-items: center; color: var(--green-dark); text-decoration: none; font-size: 13px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
-    .brand-mark { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--green); border-radius: 50%; font-family: var(--serif); font-size: 17px; }
+    .brand-mark { width: 30px; height: 30px; display: grid; place-items: center; overflow: hidden; border: 1px solid var(--green); border-radius: 50%; }
+    .brand-mark img { display: block; width: 100%; height: 100%; object-fit: cover; }
     .top-link { color: var(--green); font-size: 13px; font-weight: 600; text-decoration-thickness: 1px; text-underline-offset: 4px; }
     .masthead-actions { display: flex; align-items: center; gap: 20px; }
     .language-switch { display: flex; align-items: center; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: var(--radius-control); background: var(--white); }
@@ -93,6 +94,19 @@
     .recipe-category { color: var(--accent); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
     .recipe-title { margin: 0; color: var(--green-dark); font-family: var(--serif); font-size: 25px; font-weight: 500; line-height: 1.25; }
     .recipe-description { margin: 9px 0 15px; color: #5e5754; font-size: 13px; line-height: 1.6; }
+    .recipe-rating { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 12px; margin: 0 0 14px; }
+    .rating-buttons { display: flex; align-items: center; gap: 4px; }
+    .rating-unit { position: relative; width: 36px; height: 25px; flex: 0 0 36px; }
+    .rating-option { position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden; cursor: pointer; }
+    .rating-option-left { left: 0; }
+    .rating-option-right { right: 0; }
+    .rating-option input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap; }
+    .rating-option img { position: absolute; top: 0; display: block; width: 200%; height: 100%; max-width: none; object-fit: fill; pointer-events: none; }
+    .rating-option-left img { left: 0; }
+    .rating-option-right img { right: 0; }
+    .rating-option:hover img { filter: brightness(1.05); }
+    .rating-option input:focus-visible + img { outline: 2px solid var(--green); outline-offset: -2px; border-radius: 5px; }
+    .rating-status { color: var(--muted); font-size: 11px; }
     .recipe-details { border-top: 1px solid var(--paper-deep); }
     .recipe-details summary { padding: 12px 0 2px; color: var(--green); cursor: pointer; font-size: 12px; font-weight: 700; list-style-position: inside; }
     .recipe-content { display: grid; grid-template-columns: minmax(160px, .75fr) 1.25fr; gap: 22px; padding: 14px 0 2px; }
@@ -171,7 +185,7 @@
 <body>
   <div class="site">
     <header class="masthead">
-      <a class="brand" href="#top"><span class="brand-mark" data-i18n="brandMark" aria-hidden="true">К</span><span data-i18n="brand">Семейная книга</span></a>
+      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"><img src="recipe-images/Logo.svg?v=20261114-2" alt=""></span><span data-i18n="brand">Семейная книга</span></a>
       <div class="masthead-actions">
         <div class="language-switch" role="group" data-i18n-aria="languageSwitch" aria-label="Язык">
           <button class="language-button" type="button" data-set-lang="ru" aria-pressed="true">RU</button>
@@ -281,17 +295,17 @@
   <script>
     const recipes = [
       {
-        id: 'apple-buns', name: 'Булочки с яблоками', categoryKey: 'desserts', time: '45 минут',
+        id: 'apple-buns', name: 'Булочки с яблоками', categoryKey: 'desserts', time: 'Выпечка 20–25 минут',
         description: 'Половинки яблок в нежном сметанном тесте и тонкая карамельная шапочка.',
-        image: 'recipe-images/apple-buns.png',
+        image: 'recipe-images/Булочки с яблоками.png',
         ingredients: ['Вода — 50 мл', 'Масло или маргарин — 250 г', 'Сахар для карамельной шапки', 'Сметана — 250 мл', 'Мука — 500 г', 'Сода — ½ ч. л. и немного уксуса', 'Соль — по вкусу', 'Яблоки'],
         steps: ['Мягкое масло соединить со сметаной, влить воду и перемешать.', 'Добавить гашёную уксусом соду. В муку добавить соль и постепенно вмешать её в массу. Замесить мягкое тесто и охладить в холодильнике.', 'Яблоки вымыть, при необходимости очистить, разрезать пополам и удалить сердцевину.', 'Раскатать тесто толщиной 1–1,5 см и вырезать кружки на 1 см шире половинок яблок.', 'Обернуть каждую половинку тестом, хорошо защипнуть со стороны среза. Округлой стороной окунуть в сахар.', 'Выпекать при 180–200 °C 20–25 минут.'],
         note: 'Рецепт перенесён из семейной тетради. В исходнике масло указано как «масло/маргарин».',
       },
       {
-        id: 'baskets', name: 'Корзиночки', categoryKey: 'desserts', time: 'около 30 минут',
+        id: 'baskets', name: 'Корзиночки', categoryKey: 'desserts', time: 'Выпечка около 15 минут',
         description: 'Песочные корзинки из металлических формочек. Начинку можно выбрать по настроению.',
-        image: 'recipe-images/baskets.png',
+        image: 'recipe-images/Корзиночки.png',
         ingredients: ['Яйца — 2 шт.', 'Масло или маргарин — 200 г', 'Сахар — 125 г', 'Мука — 500 г', 'Сода — ¼ ч. л., погасить уксусом', 'Соль — ½ ч. л.', 'Сметана — количество не указано в списке ингредиентов'],
         steps: ['Отделить желтки от белков. Белки убрать в холодильник: они могут понадобиться для безе, если корзиночки будут сладкими.', 'Мягкое масло растереть с сахаром. Добавить желтки и сметану, перемешать.', 'Добавить соль, муку и гашёную соду. Вымесить тесто, чтобы оно отставало от рук.', 'При необходимости смазать металлические формочки сливочным маслом и присыпать мукой.', 'Разделить тесто на кусочки примерно по 26–28 г, скатать шарики и распределить по формам: сначала тонкое дно, затем стенки до края.', 'Выпекать при 190 °C около 15 минут, до румяного цвета.'],
         note: 'В приготовлении упоминается сметана, но её количество в списке ингредиентов не указано. Для сладкого варианта в исходнике предложен крем-безе.',
@@ -299,15 +313,15 @@
       {
         id: 'berry-pie', name: 'Пирог с ягодами', categoryKey: 'desserts', time: 'около 45 минут',
         description: 'Открытый пирог со свежими ягодами и воздушной белковой шапкой.',
-        image: 'recipe-images/berry-pie.png',
+        image: 'recipe-images/Пирог с ягодами.png',
         ingredients: ['Яйца — 5 шт.', 'Масло или маргарин — 125 г', 'Сахар — 420 г (170 г в тесто, остальное — в белковую массу)', 'Сметана — 5 ст. л.', 'Мука — 375 г', 'Сода — ½ ч. л.', 'Фрукты или ягоды для начинки, лучше свежие'],
         steps: ['Отделить желтки от белков. Белки убрать в холодильник, желательно в предварительно охлаждённой миске.', 'Мягкое масло растереть со 170 г сахара. Добавить желтки и сметану, перемешать.', 'Добавить соду в муку. Соединить мучную и масляную смеси до однородности.', 'Раскатать тесто по размеру формы, сформировать бортики и выложить начинку.', 'Выпекать при 180–200 °C 7–10 минут.', 'Пока основа печётся, взбить белки со стаканом сахара и охладить массу.', 'Покрыть пирог белковой массой и выпекать ещё около 30 минут.'],
         note: 'Температура духовки и время первого этапа в исходнике указаны вместе; готовность основы лучше проверить по своей духовке. Размер стакана сахара не уточнён.',
       },
       {
-        id: 'universal-dough', name: 'Универсальное тесто для пирожков', categoryKey: 'dough', time: 'около 40 минут',
+        id: 'universal-dough', name: 'Универсальное тесто для пирожков', categoryKey: 'dough', time: 'Отдых 15 минут · выпечка 20–25 минут',
         description: 'Без дрожжей: мягкая основа для пирожков с любой начинкой.',
-        image: 'recipe-images/universal-dough.png',
+        image: 'recipe-images/Универсальное тесто для пирожков.png',
         ingredients: ['Яйцо — 1 шт.', 'Масло или маргарин, размягчённое — 250 г', 'Сметана — 250 мл', 'Мука — 750 г', 'Сода — ½ ч. л. и немного уксуса', 'Соль — по вкусу', 'Начинка — любая'],
         steps: ['Мягкое масло соединить со сметаной и перемешать.', 'Добавить гашёную уксусом соду.', 'В муку добавить соль и постепенно ввести её в масляно-сметанную смесь. Аккуратно вымесить мягкое тесто.', 'Оставить тесто отдохнуть примерно на 15 минут.', 'Раскатать пласт толщиной 1–1,5 см, вырезать кружки и сформировать пирожки с начинкой.', 'Выпекать при 180–200 °C 20–25 минут. Смазать взбитым яйцом и подрумянить ещё несколько минут.'],
         note: 'Яйцо есть в списке ингредиентов; в исходнике отдельно сказано смазывать им пирожки перед подрумяниванием.',
@@ -315,7 +329,7 @@
       {
         id: 'pizza-natalia', name: 'Тесто для пиццы Натальи Вольновой', categoryKey: 'pizza', time: '7–10 минут в духовке',
         description: 'Тонкая основа на дрожжах, с мёдом и оливковым маслом. В тетради оценена на 10 из 10.',
-        image: 'https://images.unsplash.com/photo-1579751626657-72bc17010498?auto=format&fit=crop&w=900&q=80',
+        image: 'recipe-images/Тесто для пиццы Натальи Вольновой.jpg',
         ingredients: ['Дрожжи — 1 пакетик (11 г)', 'Мёд — 1 ч. л.', 'Соль — 1 ч. л.', 'Тёплая вода — 1 стакан', 'Оливковое масло — 1 ст. л.', 'Мука — 3 стакана'],
         steps: ['Раскатать тесто тонко.', 'Выпекать в очень хорошо разогретой духовке при 250 °C 7–10 минут.'],
         note: 'Начинку и время подъёма теста исходный документ не уточняет.',
@@ -323,7 +337,7 @@
       {
         id: 'quick-dough-sour-cream', name: 'Быстрое тесто № 1', categoryKey: 'pizza', time: 'не указано',
         description: 'Вариант быстрого теста на сметане и яйцах из подборки рецептов для пиццы.',
-        image: 'https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?auto=format&fit=crop&w=900&q=80',
+        image: 'recipe-images/Быстрое тесто № 1.jpg',
         ingredients: ['Мука — 500 г (4 стакана)', 'Сметана — 1 стакан', 'Сливочное масло — 2 ст. л.', 'Яйца — 2 шт.', 'Сахар — 1 ст. л.', 'Соль — количество не указано'],
         steps: [],
         note: 'В документе приведены только ингредиенты; способ приготовления и режим выпечки не записаны.',
@@ -331,7 +345,7 @@
       {
         id: 'quick-dough-spirit', name: 'Быстрое тесто № 2', categoryKey: 'pizza', time: 'не указано',
         description: 'Ещё один быстрый вариант теста: в составе есть маргарин и немного крепкого напитка.',
-        image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=900&q=80',
+        image: 'recipe-images/Быстрое тесто № 2.jpg',
         ingredients: ['Мука — 500 г', 'Маргарин — 200 г', 'Сахар — 1 ст. л.', 'Водка или коньяк — 2 ст. л.', 'Соль — ½ ч. л.'],
         steps: [],
         note: 'В документе приведены только ингредиенты; способ приготовления и режим выпечки не записаны.',
@@ -340,7 +354,7 @@
         id: 'baked-apples-cottage-cheese', name: 'Печёные яблоки с творогом и мёдом', categoryKey: 'desserts',
         time: '2 порции · подготовка 10 мин · готовка 15–25 мин · ~190 ккал/порция',
         description: 'Мягкие кисло-сладкие яблоки с творожной начинкой, мёдом и корицей.',
-        image: 'https://images.unsplash.com/photo-1570913149827-d2ac84ab3f9a?auto=format&fit=crop&w=900&q=80',
+        image: 'recipe-images/Печёные яблоки с творогом и мёдом.jpg',
         ingredients: ['Яблоки — 2 крупных, плотных, лучше кисло-сладких', 'Творог 5% — 100 г', 'Мёд — 2 ч. л. (по 1 ч. л. на яблоко)', 'Корица — ½ ч. л.', 'Ванильный сахар или ванилин — щепотка, по желанию', 'По желанию: горсть изюма, грецкие орехи или лимонная цедра'],
         steps: ['Вымыть яблоки. Срезать верхушки-крышечки и удалить сердцевину, оставив дно целым.', 'Размять творог вилкой с корицей, ванилью и добавками.', 'Плотно наполнить яблоки творогом, полить мёдом и накрыть крышечками. Наколоть кожицу зубочисткой в нескольких местах.', 'В духовке: разогреть до 180 °C. Поставить яблоки в форму, добавить на дно 2–3 ст. л. воды и запекать 20–25 минут, до мягкости.', 'В аэрогриле: поставить яблоки в жаропрочную форму или на фольгу с поднятыми краями. Готовить при 180 °C 12–15 минут; крупным яблокам добавить ещё 3–5 минут.', 'Проверить готовность ножом: он должен легко входить. Если творог темнеет раньше яблок, накрыть верх фольгой.', 'Дать постоять 5 минут. Подавать тёплыми или холодными, при желании полить мёдом или выделившимся соком.'],
         note: 'Быстрый вариант без начинки: нарезать яблоко кубиками, посыпать корицей и готовить в аэрогриле 8 минут при 180 °C. Подавать к овсянке, добавив сверху творог и мёд. Хранить в холодильнике до 2 суток; разогревать в аэрогриле 3–4 минуты при 160 °C.',
@@ -349,10 +363,98 @@
         id: 'honey-soy-mustard-wings', name: 'Крылышки в медово-соево-горчичном соусе', categoryKey: 'main',
         time: '2 порции · подготовка 10 мин + маринад от 30 мин · готовка 25–40 мин · ~550 ккал/порция',
         description: 'Куриные крылышки с медово-соевой глазурью, приготовленные в духовке или аэрогриле.',
-        image: 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=900&q=80',
+        image: 'recipe-images/Крылышки в медово-соево-горчичном соусе.jpg',
         ingredients: ['Куриные крылья — 500 г', 'Соевый соус — 2 ст. л.', 'Мёд — 1 ст. л.', 'Дижонская или зернистая горчица — 1 ст. л. (или русская — 1–2 ч. л.)', 'Чеснок — 2 зубчика', 'Растительное масло — 1 ч. л.', 'Паприка — ½ ч. л.', 'Чёрный перец — по вкусу; соль не нужна', 'Кунжут или зелёный лук для подачи — по желанию'],
         steps: ['Промыть крылья и тщательно обсушить. При желании отрезать кончики.', 'Смешать соевый соус, мёд, горчицу, выдавленный чеснок, масло, паприку и перец. Отложить 1 ст. л. маринада для финальной глазури.', 'Перемешать крылья с оставшимся маринадом и убрать в холодильник минимум на 30 минут, лучше на ночь.', 'В духовке: разогреть до 200 °C и застелить противень пергаментом. Разложить крылья одним слоем и запекать 20 минут.', 'Перевернуть крылья и запекать ещё 15 минут. Смазать отложенным маринадом и готовить ещё 5 минут до блестящей корочки.', 'В аэрогриле: разогреть до 180 °C в течение 3 минут. Выложить крылья свободно, одним слоем.', 'Готовить 12 минут при 180 °C, перевернуть и готовить ещё 8 минут. Смазать маринадом, повысить температуру до 200 °C и готовить ещё 4–5 минут.', 'Проверить готовность у кости: сок должен быть прозрачным, мясо — без розового оттенка. При использовании термометра температура внутри должна достигнуть 75 °C.', 'Подать с кунжутом или зелёным луком, салатом из капусты и моркови либо картофелем дольками.'],
         note: 'Мёд легко пригорает, поэтому наносите глазурь только в самом конце. Если корзина аэрогриля маленькая, готовьте в два захода. Хранить в холодильнике до 2 суток; разогревать в аэрогриле 4–5 минут при 180 °C.',
+      },
+      {
+        id: 'berry-buns', name: 'Булочки с ягодами', categoryKey: 'desserts', time: '16 булочек',
+        description: 'Ягодные булочки на сметанном тесте из короткой записи в семейной тетради.',
+        image: 'recipe-images/Булочки с ягодами.jpeg',
+        ingredients: ['Маргарин — 1 пачка (250 г)', 'Сметана — 1 стакан', 'Мука — 3 стакана', 'Сода, погашенная уксусом в ⅓ стакана воды', 'Ягоды — количество и вид не указаны'],
+        steps: [],
+        note: 'В исходнике указано, что рецепт рассчитан на 16 булочек, но способ приготовления и режим выпечки не записаны.',
+      },
+      {
+        id: 'kefir-jellied-pie', name: 'Заливной пирог на кефире', categoryKey: 'desserts', time: 'Не указано',
+        description: 'Быстрое жидкое тесто на кефире: два слоя с начинкой между ними.',
+        image: 'recipe-images/Заливной пирог на кефире.jpg',
+        ingredients: ['Кефир — 1 стакан', 'Яйца — 2 шт.', 'Соль — 1 ч. л.', 'Сахар — 1 ч. л.', 'Растительное масло — ½ стакана', 'Мука — 2 стакана', 'Сода — ½ ч. л.', 'Начинка — вид и количество не указаны'],
+        steps: ['Смешать ингредиенты до консистенции теста на оладьи.', 'Разделить тесто на две части.', 'Застелить форму бумагой для выпечки и собрать пирог слоями: тесто, начинка, тесто.'],
+        note: 'В исходнике не указаны начинка, температура и время выпечки.',
+      },
+      {
+        id: 'honey-gingerbread', name: 'Медовая коврижка', categoryKey: 'desserts', time: 'Выпечка 15 минут',
+        description: 'Медовое тесто с корицей, прослойкой из повидла или варенья и простой сахарной пропиткой.',
+        image: 'recipe-images/Медовая коврижка.jpg',
+        ingredients: ['Сахар — 100 г', 'Яйца — 2 шт.', 'Мёд — 4 ст. л.', 'Сливочное масло — 125 г', 'Корица — количество не указано', 'Сода — 1 ч. л., не гасить', 'Мука — примерно 430–450 г (3½ стакана)', 'Повидло или варенье — для прослойки', 'Для сиропа: сахар — 2 ст. л., вода — 4 ст. л.'],
+        steps: ['На водяной бане нагреть всё, кроме муки, до жидкого состояния.', 'Добавить муку и разделить тесто на две части.', 'Промазать повидлом или вареньем.', 'Выпекать 15 минут при 180 °C.', 'Для пропитки приготовить сироп из 2 ст. л. сахара и 4 ст. л. воды.'],
+        note: 'В исходнике не уточнено, как именно собрать коврижку и когда наносить сироп.',
+      },
+      {
+        id: 'cottage-cheese-cookies', name: 'Печенье с творогом', categoryKey: 'desserts', time: 'Не указано',
+        description: 'Творожное тесто, сформированное треугольниками с сахарной посыпкой.',
+        image: 'recipe-images/Печенье с творогом.jpg',
+        ingredients: ['Творог — 500 г', 'Сливочное масло или маргарин — 250 г', 'Мука — 3 стакана', 'Сода — ½ ч. л.', 'Масло для смазывания — количество не указано', 'Сахар для посыпки — количество не указано'],
+        steps: ['Замесить тесто.', 'Сформировать из теста треугольники.', 'Смазать маслом и посыпать сахаром.'],
+        note: 'Температура и время выпечки в исходнике не указаны.',
+      },
+      {
+        id: 'choux-pastries', name: 'Пирожное заварное', categoryKey: 'desserts', time: 'Не указано',
+        description: 'Заварное тесто из четырёх ингредиентов, которое выкладывают на противень ложкой.',
+        image: 'recipe-images/Пирожное заварное.webp',
+        ingredients: ['Вода — 1 стакан', 'Сливочный маргарин — ½ пачки', 'Мука — 1 стакан', 'Яйца — 5 шт.'],
+        steps: ['Поставить воду с маргарином на огонь.', 'Когда смесь закипит, всыпать муку.', 'Отдельно взбить яйца и ввести их в тесто в три приёма, хорошо перемешивая.', 'Выкладывать тесто чайной ложкой на противень.'],
+        note: 'Температура и время выпечки в исходнике не указаны.',
+      },
+      {
+        id: 'cottage-cheese-casserole', name: 'Творожная запеканка', categoryKey: 'desserts', time: 'Не указано',
+        description: 'Запеканка из творога, яиц и манки с ванилином, солью и содой.',
+        image: 'recipe-images/Творожная запеканка.webp',
+        ingredients: ['Творог — 500 г', 'Яйца — 3 шт.', 'Сахар — ½ стакана', 'Манка — 4 ст. л.', 'Сливочное масло — 4 ст. л.', 'Ванилин, соль и сода — количество не указано'],
+        steps: [],
+        note: 'В документе приведён только список ингредиентов; способ приготовления и режим выпечки не записаны.',
+      },
+      {
+        id: 'cottage-cheese-muffins', name: 'Творожные кексы', categoryKey: 'desserts', time: 'Не указано',
+        description: 'Нежные кексы с творогом; в тесто можно добавить сухофрукты, орехи или цедру.',
+        image: 'recipe-images/Творожные кексы.jpg',
+        ingredients: ['Яйца — 3 шт.', 'Сахар — 1 стакан', 'Сливочное масло — 120 г', 'Соль — ⅓ ч. л.', 'Творог — 200 г', 'Мука — 230 г', 'Разрыхлитель — 1 ч. л. с горкой', 'Ванильный сахар — 8 г', 'Сода — немного', 'По желанию: изюм, орехи, цукаты или апельсиновая цедра'],
+        steps: ['Взбить в блендере яйца, сахар, сливочное масло, соль и творог.', 'Добавить муку, разрыхлитель, ванильный сахар и немного соды.', 'Вводить муку частями. По желанию добавить изюм, орехи, цукаты или цедру.'],
+        note: 'Температура и время выпечки в исходнике не указаны.',
+      },
+      {
+        id: 'nut-cookies-dough', name: 'Тесто для орешков', categoryKey: 'dough', time: 'Не указано',
+        description: 'Тесто для печенья-орешков с начинкой из варёной сгущёнки и грецких орехов.',
+        image: 'recipe-images/Тесто для орешков.jpeg',
+        ingredients: ['Мука — 3 стакана', 'Яйца — 2 шт.', 'Сахар — ½ стакана', 'Маргарин — 250 г', 'Соль — ¼ ч. л.', 'Сода — ¼ ч. л.', 'Ванилин — упоминается в способе приготовления, количество не указано', 'Варёная сгущёнка — 1 банка (варить 2 часа)', 'Грецкие орехи — 200 г'],
+        steps: ['Взбить белки. Желтки растереть с сахаром и добавить соду, погашенную уксусом.', 'Маргарин растереть с мукой, добавить ванилин и тщательно перемешать.', 'Для начинки варить банку сгущённого молока 2 часа и соединить с грецкими орехами.'],
+        note: 'В исходнике не описаны формовка и выпечка орешков, а также порядок соединения частей теста.',
+      },
+      {
+        id: 'eastern-cake', name: 'Торт «Восточный»', categoryKey: 'desserts', time: 'Не указано',
+        description: 'Медовые коржи и заварной крем на молоке, яйце и сливочном масле.',
+        image: 'recipe-images/Торт Восточный.jpeg',
+        ingredients: ['Для теста: маргарин — ½ пачки', 'Яйца — 3 шт.', 'Сахар — 1 стакан', 'Мёд — 2 ст. л.', 'Сода — 1 ч. л.', 'Мука — 2 стакана', 'Для крема: молоко — 1 стакан', 'Яйцо — 1 шт.', 'Сахар — ½ стакана', 'Сливочное масло — 300 г'],
+        steps: ['Яйца взбить с сахаром, добавить мёд и маргарин. Нагревать на водяной бане.', 'Когда смесь закипит, добавить соду, затем в три приёма всыпать муку, постоянно перемешивая.', 'Варить тесто ещё 5 минут, снять с огня и остудить. Разделить на четыре части.', 'Для крема варить молоко, яйцо и сахар до загустения. Остудить, добавить сливочное масло и взбить.'],
+        note: 'В исходнике не описаны выпечка коржей и сборка торта.',
+      },
+      {
+        id: 'wonder-vatrushka', name: 'Чудо-ватрушка', categoryKey: 'desserts', time: 'Не указано',
+        description: 'Сладкая крошка с творожной начинкой, собранная слоями.',
+        image: 'recipe-images/Чудо-ватрушка.jpg',
+        ingredients: ['Для теста: мука — 2 стакана', 'Масло или маргарин — 200 г', 'Сахар — ½ стакана', 'Сода — ½ ч. л.', 'Для начинки: творог — 500 г', 'Сахар — ½ стакана', 'Яйца — 2–3 шт.'],
+        steps: ['Перетереть ингредиенты теста в крошку и разделить её на две части.', 'Собрать слоями: крошка, творожная начинка, крошка.', 'Поставить в духовку.'],
+        note: 'Температура и время выпечки в исходнике не указаны.',
+      },
+      {
+        id: 'chocolate-banana-brownie', name: 'Шоколадно-банановый брауни', categoryKey: 'desserts', time: 'Выпечка 45–50 минут',
+        description: 'Шоколадный брауни с бананами и кусочками тёмного шоколада.',
+        image: 'recipe-images/Шоколадно-банановый брауни.jpg',
+        ingredients: ['Бананы — 2 шт.', 'Сливочное масло — 150 г', 'Яйца — 2 шт.', 'Мука — 150 г', 'Сахар — 120 г', 'Соль — ½ ч. л.', 'Тёмный шоколад — 50 г', 'Какао — 40 г', 'Разрыхлитель — 1 ч. л.'],
+        steps: ['Размять бананы.', 'Добавить яйца, сахар, растопленное сливочное масло, какао, муку, соль и разрыхлитель.', 'Добавить мелко нарезанный шоколад.', 'Выпекать при 180 °C 45–50 минут.'],
+        note: '',
       },
     ];
 
@@ -363,7 +465,7 @@
     };
     const text = {
       ru: {
-        title: 'Семейная книга рецептов', brandMark: 'К', brand: 'Семейная книга', languageSwitch: 'Выбор языка', addRecipe: 'Добавить рецепт', heroEyebrow: 'Из семейной тетради',
+        title: 'Семейная книга рецептов', brand: 'Семейная книга', languageSwitch: 'Выбор языка', addRecipe: 'Добавить рецепт', heroEyebrow: 'Из семейной тетради',
         heroTitleLine1: 'Рецепты,', heroTitleLine2: 'которые нас собирают', heroSubtitle: 'Домашняя выпечка, тесто для больших планов и вкусные истории, которые хочется передавать дальше.',
         openBook: 'Открыть книгу', heroImageAlt: 'Свежая выпечка на столе', factsAria: 'О книге рецептов', factRecipes: 'рецептов в книге', factSections: 'семейных раздела', factKitchen: 'общая кухня',
         welcomeKicker: 'Добро пожаловать', welcomeText: 'В этой книге собраны рецепты мамы, бабушки и наших друзей: любимые семейные блюда, домашняя выпечка и маленькие кулинарные открытия. Выбирайте рецепт, готовьте и дополняйте коллекцию.',
@@ -372,6 +474,7 @@
         byCategory: 'По разделам', alphabeticalIndex: 'Алфавитный указатель', alphabetical: 'По алфавиту', shownCount: 'Показано: {shown} из {total}',
         recipeSingular: 'рецепт', recipePlural: 'рецепта', recipeMany: 'рецептов', ingredients: 'Ингредиенты', preparation: 'Приготовление',
         notebookEntry: 'Запись в тетради', missingSteps: 'Способ приготовления не записан в исходном документе.', illustration: 'Иллюстрация: {name}',
+        ratingGroup: 'Оценка рецепта: {name}', ratingNotSet: 'Ваша оценка: ещё не поставлена', ratingSaved: 'Ваша оценка: {rating}/5', rateRecipe: 'Оценить на {rating} из 5',
         emptySearch: 'Ничего не нашлось. Попробуйте изменить запрос или раздел.', formKicker: 'Пополнить семейную книгу', formTitle: 'Поделитесь своим рецептом',
         formIntro: 'Заполните рецепт подробно: ингредиенты и шаги приготовления проверяются перед отправкой. Так читателю будет проще повторить его на своей кухне.',
         recipeNameLabel: 'Название рецепта *', recipeNamePlaceholder: 'Например, бабушкин яблочный пирог', recipeCategoryLabel: 'Раздел *', selectCategory: 'Выберите раздел',
@@ -387,7 +490,7 @@
         localSaveFailed: 'Проверка пройдена, но браузер не разрешил сохранить черновик. Подключите сервис отправки рецептов.',
       },
       en: {
-        title: 'Family Recipe Book', brandMark: 'F', brand: 'Family Recipe Book', languageSwitch: 'Choose language', addRecipe: 'Add a recipe', heroEyebrow: 'From our family notebook',
+        title: 'Family Recipe Book', brand: 'Family Recipe Book', languageSwitch: 'Choose language', addRecipe: 'Add a recipe', heroEyebrow: 'From our family notebook',
         heroTitleLine1: 'Recipes', heroTitleLine2: 'that bring us together', heroSubtitle: 'Home baking, dough for big plans, and the kind of food stories worth passing down.',
         openBook: 'Browse the book', heroImageAlt: 'Fresh homemade baking on a table', factsAria: 'About the recipe book', factRecipes: 'recipes in the book', factSections: 'family sections', factKitchen: 'shared kitchen',
         welcomeKicker: 'Welcome', welcomeText: 'This book brings together recipes from Mum, Grandma, and our friends: family favourites, homemade baking, and little kitchen discoveries. Pick a recipe, make it, and add to the collection.',
@@ -396,6 +499,7 @@
         byCategory: 'By category', alphabeticalIndex: 'Alphabetical recipe index', alphabetical: 'A to Z', shownCount: 'Showing {shown} of {total}',
         recipeSingular: 'recipe', recipePlural: 'recipes', recipeMany: 'recipes', ingredients: 'Ingredients', preparation: 'Method',
         notebookEntry: 'From the notebook', missingSteps: 'The original document does not include preparation instructions.', illustration: 'Photo: {name}',
+        ratingGroup: 'Rate recipe: {name}', ratingNotSet: 'Your rating: not set', ratingSaved: 'Your rating: {rating}/5', rateRecipe: 'Rate {rating} out of 5',
         emptySearch: 'No recipes found. Try another search or category.', formKicker: 'Add to the family collection', formTitle: 'Share a recipe',
         formIntro: 'Include the ingredients and method. Every submission is checked before it is added so others can recreate it in their own kitchen.',
         recipeNameLabel: 'Recipe name *', recipeNamePlaceholder: 'For example, Grandma’s apple pie', recipeCategoryLabel: 'Category *', selectCategory: 'Choose a category',
@@ -413,14 +517,14 @@
     };
     const recipeText = {
       'apple-buns': {
-        name: 'Apple buns', category: 'Baking & desserts', time: 'About 45 minutes',
+        name: 'Apple buns', category: 'Baking & desserts', time: 'Bake for 20–25 minutes',
         description: 'Apple halves wrapped in tender sour-cream pastry, finished with a crisp caramelised sugar top.',
         ingredients: ['Water — 50 ml', 'Butter or margarine — 250 g', 'Sugar for the caramelised tops', 'Sour cream — 250 ml', 'Flour — 500 g', 'Baking soda — ½ tsp, plus a little vinegar', 'Salt — to taste', 'Apples'],
         steps: ['Mix the softened butter with the sour cream, add the water, and stir.', 'Add the baking soda fizzed with vinegar. Salt the flour and gradually work it into the mixture. Knead a soft dough and chill it in the fridge.', 'Wash the apples, peel if desired, halve them, and remove the cores.', 'Roll the dough 1–1.5 cm thick and cut circles about 1 cm wider than the apple halves.', 'Wrap each apple half in dough and seal firmly along the cut side. Dip the rounded top in sugar.', 'Bake at 180–200 °C for 20–25 minutes.'],
         note: 'Transcribed from the family notebook. The original lists either butter or margarine.',
       },
       baskets: {
-        name: 'Pastry tartlet shells', category: 'Baking & desserts', time: 'About 30 minutes',
+        name: 'Pastry tartlet shells', category: 'Baking & desserts', time: 'Bake for about 15 minutes',
         description: 'Shortcrust shells baked in metal moulds, ready for a filling of your choice.',
         ingredients: ['Eggs — 2', 'Butter or margarine — 200 g', 'Sugar — 125 g', 'Flour — 500 g', 'Baking soda — ¼ tsp, dissolved with vinegar', 'Salt — ½ tsp', 'Sour cream — amount missing from the ingredient list'],
         steps: ['Separate the yolks and whites. Refrigerate the whites; they may be used for meringue if making sweet tartlets.', 'Rub the softened butter and sugar together. Add the yolks and sour cream; mix.', 'Add the salt, flour, and fizzed baking soda. Knead until the dough no longer sticks to your hands.', 'If needed, lightly butter the metal moulds and dust them with flour.', 'Divide the dough into pieces of about 26–28 g, roll into balls, and press into the moulds: make a thinner base, then bring the dough up the sides.', 'Bake at 190 °C for about 15 minutes, until golden.'],
@@ -434,7 +538,7 @@
         note: 'The original gives the oven temperature and first baking time together; check the base in your own oven. The size of the sugar glass is not specified.',
       },
       'universal-dough': {
-        name: 'All-purpose dough for hand pies', category: 'Dough & basics', time: 'About 40 minutes',
+        name: 'All-purpose dough for hand pies', category: 'Dough & basics', time: 'Rest 15 minutes · bake for 20–25 minutes',
         description: 'A soft, yeast-free dough for hand pies with any filling.',
         ingredients: ['Egg — 1', 'Softened butter or margarine — 250 g', 'Sour cream — 250 ml', 'Flour — 750 g', 'Baking soda — ½ tsp, plus a little vinegar', 'Salt — to taste', 'Filling of your choice'],
         steps: ['Mix the softened butter with the sour cream.', 'Add the baking soda fizzed with vinegar.', 'Salt the flour and gradually work it into the butter mixture. Knead gently until soft.', 'Leave the dough to rest for about 15 minutes.', 'Roll the dough 1–1.5 cm thick, cut out circles, and shape the pies with your filling.', 'Bake at 180–200 °C for 20–25 minutes. Brush with beaten egg and bake for a few more minutes until golden.'],
@@ -476,6 +580,83 @@
         ingredients: ['Chicken wings — 500 g', 'Soy sauce — 2 tbsp', 'Honey — 1 tbsp', 'Dijon or wholegrain mustard — 1 tbsp (or hot English mustard — 1–2 tsp)', 'Garlic — 2 cloves', 'Vegetable oil — 1 tsp', 'Paprika — ½ tsp', 'Black pepper — to taste; no extra salt needed', 'Sesame seeds or spring onions to serve — optional'],
         steps: ['Rinse the wings and pat them thoroughly dry. Trim the tips if desired.', 'Mix the soy sauce, honey, mustard, crushed garlic, oil, paprika, and pepper. Set aside 1 tbsp of the marinade for the final glaze.', 'Toss the wings in the remaining marinade and refrigerate for at least 30 minutes, preferably overnight.', 'Oven: preheat to 200 °C and line a baking tray with parchment. Arrange the wings in one layer and bake for 20 minutes.', 'Turn the wings and bake for another 15 minutes. Brush with the reserved marinade and cook for 5 more minutes until glossy.', 'Air fryer: preheat to 180 °C for 3 minutes. Arrange the wings in a single, uncrowded layer.', 'Cook at 180 °C for 12 minutes, turn, and cook for 8 more minutes. Brush with the reserved marinade, raise the temperature to 200 °C, and cook for 4–5 minutes.', 'Check near the bone: the juices should run clear and the meat should not be pink. If using a thermometer, the internal temperature should reach 75 °C.', 'Serve with sesame seeds or spring onions, cabbage and carrot salad, or air-fryer potato wedges.'],
         note: 'Honey burns easily, so brush on the glaze only at the very end. Cook in batches if the air-fryer basket is small. Refrigerate for up to 2 days; reheat in the air fryer at 180 °C for 4–5 minutes.',
+      },
+      'berry-buns': {
+        name: 'Berry buns', category: 'Baking & desserts', time: 'Makes 16 buns',
+        description: 'Sour-cream pastry buns with berries, from a brief family notebook entry.',
+        ingredients: ['Margarine — 1 pack (250 g)', 'Sour cream — 1 cup', 'Flour — 3 cups', 'Baking soda, fizzed with vinegar in ⅓ cup water', 'Berries — type and amount not specified'],
+        steps: [],
+        note: 'The original says the recipe makes 16 buns, but does not include the method or baking instructions.',
+      },
+      'kefir-jellied-pie': {
+        name: 'Kefir jellied pie', category: 'Baking & desserts', time: 'Not specified',
+        description: 'A quick kefir batter layered with a filling between two portions of dough.',
+        ingredients: ['Kefir — 1 cup', 'Eggs — 2', 'Salt — 1 tsp', 'Sugar — 1 tsp', 'Vegetable oil — ½ cup', 'Flour — 2 cups', 'Baking soda — ½ tsp', 'Filling — type and amount not specified'],
+        steps: ['Mix the ingredients to a consistency like pancake batter.', 'Divide the batter into two portions.', 'Line a baking tin with parchment and layer the pie: batter, filling, batter.'],
+        note: 'The original does not specify the filling, oven temperature, or baking time.',
+      },
+      'honey-gingerbread': {
+        name: 'Honey gingerbread', category: 'Baking & desserts', time: 'Bake for 15 minutes',
+        description: 'A cinnamon-scented honey bake with a jam layer and a simple sugar syrup.',
+        ingredients: ['Sugar — 100 g', 'Eggs — 2', 'Honey — 4 tbsp', 'Butter — 125 g', 'Cinnamon — amount not specified', 'Baking soda — 1 tsp, do not dissolve', 'Flour — about 430–450 g (3½ cups)', 'Jam or fruit preserve — for the filling', 'For the syrup: sugar — 2 tbsp, water — 4 tbsp'],
+        steps: ['Heat everything except the flour over a bain-marie until liquid.', 'Add the flour and divide the dough into two portions.', 'Spread jam or fruit preserve between the portions.', 'Bake at 180 °C for 15 minutes.', 'Make the syrup with 2 tbsp sugar and 4 tbsp water.'],
+        note: 'The original does not explain how to assemble the gingerbread or when to add the syrup.',
+      },
+      'cottage-cheese-cookies': {
+        name: 'Cottage cheese cookies', category: 'Baking & desserts', time: 'Not specified',
+        description: 'Cottage-cheese dough shaped into sugared triangles.',
+        ingredients: ['Cottage cheese — 500 g', 'Butter or margarine — 250 g', 'Flour — 3 cups', 'Baking soda — ½ tsp', 'Butter for brushing — amount not specified', 'Sugar for sprinkling — amount not specified'],
+        steps: ['Knead the dough.', 'Shape it into triangles.', 'Brush with butter and sprinkle with sugar.'],
+        note: 'The original does not specify the oven temperature or baking time.',
+      },
+      'choux-pastries': {
+        name: 'Choux pastries', category: 'Baking & desserts', time: 'Not specified',
+        description: 'A simple choux pastry made with four ingredients and spooned onto a baking tray.',
+        ingredients: ['Water — 1 cup', 'Butter-style margarine — ½ pack', 'Flour — 1 cup', 'Eggs — 5'],
+        steps: ['Heat the water and margarine in a pan.', 'When the mixture boils, add the flour.', 'Beat the eggs separately and mix them into the dough in three additions.', 'Spoon the dough onto a baking tray using a teaspoon.'],
+        note: 'The original does not specify the oven temperature or baking time.',
+      },
+      'cottage-cheese-casserole': {
+        name: 'Cottage cheese casserole', category: 'Baking & desserts', time: 'Not specified',
+        description: 'A cottage-cheese bake with eggs and semolina, seasoned with vanilla, salt, and baking soda.',
+        ingredients: ['Cottage cheese — 500 g', 'Eggs — 3', 'Sugar — ½ cup', 'Semolina — 4 tbsp', 'Butter — 4 tbsp', 'Vanilla, salt, and baking soda — amounts not specified'],
+        steps: [],
+        note: 'The document lists ingredients only; preparation and baking instructions are not included.',
+      },
+      'cottage-cheese-muffins': {
+        name: 'Cottage cheese muffins', category: 'Baking & desserts', time: 'Not specified',
+        description: 'Tender cottage-cheese muffins with optional dried fruit, nuts, or citrus zest.',
+        ingredients: ['Eggs — 3', 'Sugar — 1 cup', 'Butter — 120 g', 'Salt — ⅓ tsp', 'Cottage cheese — 200 g', 'Flour — 230 g', 'Baking powder — 1 heaped tsp', 'Vanilla sugar — 8 g', 'A little baking soda', 'Optional: raisins, nuts, candied fruit, or orange zest'],
+        steps: ['Blend the eggs, sugar, butter, salt, and cottage cheese.', 'Add the flour, baking powder, vanilla sugar, and a little baking soda.', 'Add the flour gradually. Fold in raisins, nuts, candied fruit, or zest if desired.'],
+        note: 'The original does not specify the oven temperature or baking time.',
+      },
+      'nut-cookies-dough': {
+        name: 'Dough for nut-shaped cookies', category: 'Dough & basics', time: 'Not specified',
+        description: 'Dough for nut-shaped cookies with a filling of boiled condensed milk and walnuts.',
+        ingredients: ['Flour — 3 cups', 'Eggs — 2', 'Sugar — ½ cup', 'Margarine — 250 g', 'Salt — ¼ tsp', 'Baking soda — ¼ tsp', 'Vanilla — mentioned in the method, amount not specified', 'Condensed milk — 1 can (boil for 2 hours)', 'Walnuts — 200 g'],
+        steps: ['Whip the egg whites. Rub the yolks with the sugar and add baking soda dissolved with vinegar.', 'Rub the margarine into the flour, add vanilla, and mix thoroughly.', 'For the filling, boil a can of condensed milk for 2 hours and combine it with the walnuts.'],
+        note: 'The original does not explain how to shape and bake the cookies or how to combine the dough components.',
+      },
+      'eastern-cake': {
+        name: 'Eastern cake', category: 'Baking & desserts', time: 'Not specified',
+        description: 'Honey cake layers with a custard made from milk, egg, sugar, and butter.',
+        ingredients: ['For the dough: margarine — ½ pack', 'Eggs — 3', 'Sugar — 1 cup', 'Honey — 2 tbsp', 'Baking soda — 1 tsp', 'Flour — 2 cups', 'For the cream: milk — 1 cup', 'Egg — 1', 'Sugar — ½ cup', 'Butter — 300 g'],
+        steps: ['Beat the eggs with the sugar, then add the honey and margarine. Heat over a bain-marie.', 'When the mixture boils, add the baking soda, then add the flour in three additions, stirring continuously.', 'Cook the dough for 5 more minutes, remove from the heat, and leave to cool. Divide into four portions.', 'For the cream, cook the milk, egg, and sugar until thickened. Cool, add the butter, and beat.'],
+        note: 'The original does not describe baking the cake layers or assembling the cake.',
+      },
+      'wonder-vatrushka': {
+        name: 'Wonder vatrushka', category: 'Baking & desserts', time: 'Not specified',
+        description: 'A sweet cottage-cheese filling layered between two portions of buttery crumbs.',
+        ingredients: ['For the dough: flour — 2 cups', 'Butter or margarine — 200 g', 'Sugar — ½ cup', 'Baking soda — ½ tsp', 'For the filling: cottage cheese — 500 g', 'Sugar — ½ cup', 'Eggs — 2–3'],
+        steps: ['Rub the dough ingredients into crumbs and divide into two portions.', 'Layer the crumbs, cottage-cheese filling, and remaining crumbs.', 'Bake in the oven.'],
+        note: 'The original does not specify the oven temperature or baking time.',
+      },
+      'chocolate-banana-brownie': {
+        name: 'Chocolate banana brownie', category: 'Baking & desserts', time: 'Bake for 45–50 minutes',
+        description: 'A chocolate brownie with bananas and pieces of dark chocolate.',
+        ingredients: ['Bananas — 2', 'Butter — 150 g', 'Eggs — 2', 'Flour — 150 g', 'Sugar — 120 g', 'Salt — ½ tsp', 'Dark chocolate — 50 g', 'Cocoa — 40 g', 'Baking powder — 1 tsp'],
+        steps: ['Mash the bananas.', 'Add the eggs, sugar, melted butter, cocoa, flour, salt, and baking powder.', 'Stir in the finely chopped chocolate.', 'Bake at 180 °C for 45–50 minutes.'],
+        note: '',
       },
     };
     const sectionContents = document.getElementById('sectionContents');
@@ -605,6 +786,71 @@
       const meta = make('div', 'recipe-meta');
       meta.append(make('span', 'recipe-category', localized.category), make('span', '', localized.time));
       body.append(meta, make('h4', 'recipe-title', localized.name), make('p', 'recipe-description', localized.description));
+
+      const ratingKey = `familyRecipeRating:${recipe.id}`;
+      const storedRating = Number(localStorage.getItem(ratingKey));
+      let selectedRating = Number.isFinite(storedRating) && storedRating >= 0.5 && storedRating <= 5 && Number.isInteger(storedRating * 2) ? storedRating : 0;
+      const ratingGroup = make('div', 'recipe-rating');
+      ratingGroup.setAttribute('role', 'radiogroup');
+      ratingGroup.setAttribute('aria-label', translate('ratingGroup').replace('{name}', localized.name));
+      const ratingButtons = make('div', 'rating-buttons');
+      const formatRating = rating => currentLanguage === 'ru' ? String(rating).replace('.', ',') : String(rating);
+      const ratingStatus = make('span', 'rating-status', selectedRating
+        ? translate('ratingSaved').replace('{rating}', formatRating(selectedRating))
+        : translate('ratingNotSet'));
+      const ratingImages = [];
+      const ratingImagePaths = {
+        full: 'recipe-images/пирожок золотой полный.svg',
+        half: 'recipe-images/пирожок золотой половина.svg',
+        empty: 'recipe-images/пирожок золотой пустой.svg',
+      };
+
+      function updateRatingImages() {
+        ratingImages.forEach((images, index) => {
+          const pieValue = index + 1;
+          const imagePath = selectedRating >= pieValue
+            ? ratingImagePaths.full
+            : selectedRating >= pieValue - 0.5
+              ? ratingImagePaths.half
+              : ratingImagePaths.empty;
+          images.forEach(image => { image.src = imagePath; });
+        });
+      }
+
+      for (let pie = 1; pie <= 5; pie += 1) {
+        const unit = make('div', 'rating-unit');
+        const unitImages = [];
+
+        [pie - 0.5, pie].forEach((rating, index) => {
+          const label = make('label', `rating-option ${index === 0 ? 'rating-option-left' : 'rating-option-right'}`);
+          const input = make('input');
+          input.type = 'radio';
+          input.name = `recipe-rating-${recipe.id}`;
+          input.value = String(rating);
+          input.checked = selectedRating === rating;
+          input.setAttribute('aria-label', translate('rateRecipe').replace('{rating}', formatRating(rating)));
+          const image = make('img');
+          image.src = ratingImagePaths.empty;
+          image.alt = '';
+          image.setAttribute('aria-hidden', 'true');
+          label.append(input, image);
+          input.addEventListener('change', () => {
+            selectedRating = Number(input.value);
+            localStorage.setItem(ratingKey, String(selectedRating));
+            updateRatingImages();
+            ratingStatus.textContent = translate('ratingSaved').replace('{rating}', formatRating(selectedRating));
+          });
+          unit.append(label);
+          unitImages.push(image);
+        });
+
+        ratingButtons.append(unit);
+        ratingImages.push(unitImages);
+      }
+
+      updateRatingImages();
+      ratingGroup.append(ratingButtons, ratingStatus);
+      body.append(ratingGroup);
 
       const details = make('details', 'recipe-details');
       const summary = make('summary', '', `${translate('ingredients')} & ${translate('preparation')}`);
